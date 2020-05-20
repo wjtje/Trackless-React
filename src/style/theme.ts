@@ -8,8 +8,5 @@ export default createMuiTheme({
     secondary: {
       main: '#93201C'
     },
-    background: {
-      paper: (localStorage.getItem('dark') == 'true') ? '#424242' : '#fff'
-    },
   }
 });
