@@ -1,0 +1,1 @@
+ - custom one page url system. like site.ga/#/home
