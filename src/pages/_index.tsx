@@ -11,13 +11,11 @@ import settingsPage from './settings';
 export function ReactApp() {
   return (
     <Shell
-      title="Trackless - Demo"
+      title="Trackless - Beta"
       pages={[
         homePage,
         settingsPage
       ]}
-    >
-      <Typography variant="h5">Hello World!</Typography>
-    </Shell>
+    />
   )
 }
