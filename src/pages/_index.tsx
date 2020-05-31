@@ -7,6 +7,7 @@ import { Typography } from '@material-ui/core';
 // Import pages
 import homePage from './home';
 import settingsPage from './settings';
+import accountPage from './account';
 
 export function ReactApp() {
   return (
@@ -14,7 +15,8 @@ export function ReactApp() {
       title="Trackless - Beta"
       pages={[
         homePage,
-        settingsPage
+        accountPage,
+        settingsPage,
       ]}
     />
   )

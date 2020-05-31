@@ -46,31 +46,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Create promise
-const userInfo = new Promise((resolve, reject) => {
-  $.ajax({
-    url: serverUrl + '/user/~',
-    method: "GET",
-    data: {
-      apiKey: apiKey
-    },
-  }).done(resolve).fail((errorResult) => {
-    console.log(JSON.parse(errorResult.responseText));
-    reject(JSON.parse(errorResult.responseText));
-  });
-});
-
 // Create the page
 function Page() {
   const classes = useStyles();
-
-  // States
-  const [welcomeUser, setWelcomeUser] = useState(undefined);
-
-  // Get the user info
-  userInfo.then((response: any) => {
-    setWelcomeUser(`What have you done today ${JSON.parse(response).result[0].firstname} ${JSON.parse(response).result[0].lastname}?`);
-  });
 
   return (
     <main className={classes.root}>

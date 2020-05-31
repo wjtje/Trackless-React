@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import tracklessTheme from '../style/theme';
 import { ThemeProvider, AppBar, Toolbar, Typography, makeStyles, IconButton, Drawer, List, Divider, Container, ListItemText, ListItem, ListItemIcon, Hidden } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { SnackbarProvider } from 'notistack';
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -48,52 +49,54 @@ export default function Shell(props) {
   }
 
   return (
-    <ThemeProvider theme={tracklessTheme}>
-      {/* Header */}
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
-            setMenuState(true); // Open the Drawer / Menu
-          }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            {props.title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      {/* Drawer / Menu */}
-      <Drawer anchor="left" open={menuState} onClose={() => {setMenuState(false)}}>
-          <List className={classes.drawerList}>
-            <Typography variant="h6" className={classes.drawerTitle}>Trackless</Typography>
-            <Typography variant="body2" className={classes.drawerSubTitle}>Client beta</Typography>
-            <Divider/>
-            {props.pages.map((menuItem) => {
-              if (menuItem.showInMenu) {
-                return (
-                  <ListItem button key={menuItem.name} onClick={() => {
-                    setActivePage(menuItem.url);  // Move to the other page
-                    setMenuState(false);          // Close the Drawer / menu
-                    history.pushState({}, menuItem.name, menuItem.url);   // Push to history
-                  }}>
-                    <ListItemIcon>
-                      {menuItem.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={menuItem.name}/>
-                  </ListItem>
-                )
-              }
-            })}
-          </List>
-      </Drawer>
-      {/* Pages */}
-      <Container component="main" className={classes.main}>
-        {props.pages.map((pageItem) => (
-          <Typography component="div" hidden={pageItem.url != activePage} key={pageItem.url}>
-            {pageItem.page}
-          </Typography>
-        ))}
-      </Container>
-    </ThemeProvider>
+    <SnackbarProvider maxSnack={3}>
+      <ThemeProvider theme={tracklessTheme}>
+        {/* Header */}
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
+              setMenuState(true); // Open the Drawer / Menu
+            }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {props.title}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        {/* Drawer / Menu */}
+        <Drawer anchor="left" open={menuState} onClose={() => {setMenuState(false)}}>
+            <List className={classes.drawerList}>
+              <Typography variant="h6" className={classes.drawerTitle}>Trackless</Typography>
+              <Typography variant="body2" className={classes.drawerSubTitle}>Client beta</Typography>
+              <Divider/>
+              {props.pages.map((menuItem) => {
+                if (menuItem.showInMenu) {
+                  return (
+                    <ListItem button key={menuItem.name} onClick={() => {
+                      setActivePage(menuItem.url);  // Move to the other page
+                      setMenuState(false);          // Close the Drawer / menu
+                      history.pushState({}, menuItem.name, menuItem.url);   // Push to history
+                    }}>
+                      <ListItemIcon>
+                        {menuItem.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={menuItem.name}/>
+                    </ListItem>
+                  )
+                }
+              })}
+            </List>
+        </Drawer>
+        {/* Pages */}
+        <Container component="main" className={classes.main}>
+          {props.pages.map((pageItem) => (
+            <Typography component="div" hidden={pageItem.url != activePage} key={pageItem.url}>
+              {pageItem.page}
+            </Typography>
+          ))}
+        </Container>
+      </ThemeProvider>
+    </SnackbarProvider>
   )
 }
