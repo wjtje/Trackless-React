@@ -47,8 +47,9 @@ export default function () {
         deviceName: deviceName
       }
     }).done((result) => {
+      console.log(JSON.parse(result));
       // Save api key
-      localStorage.setItem('apiKey', JSON.parse(result).apiKey);
+      localStorage.setItem('apiKey', JSON.parse(result).bearer);
       location.reload();
     }).fail((result) => {
       // Trow error

@@ -22,6 +22,7 @@
     "@types/lodash": "^4.14.152",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.5",
     "parcel-bundler": "^1.12.4",
     "typescript": "^3.9.3"
   },
@@ -33,6 +34,7 @@
     "lodash": "^4.17.15",
     "notistack": "^0.9.16",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
   }
 }

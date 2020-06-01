@@ -81,10 +81,4 @@ function Page() {
 }
 
 // Export the page
-export default {
-  name: 'Account',
-  icon: <AccountBoxIcon/>,
-  showInMenu: true,
-  url: '#/account',
-  page: <Page/>
-}
+export default Page;

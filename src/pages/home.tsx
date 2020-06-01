@@ -91,10 +91,4 @@ function Page() {
 }
 
 // Export the page
-export default {
-  name: 'Home',
-  icon: <HomeIcon/>,
-  showInMenu: true,
-  url: '#/home',
-  page: <Page/>
-}
+export default Page;
