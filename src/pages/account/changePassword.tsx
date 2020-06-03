@@ -13,7 +13,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ChangePasswordDialog(props) {
+export default function ChangePasswordDialog(props: {
+  open: boolean;
+  onClose: (state: boolean) => void;
+}) {
   const { open, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();

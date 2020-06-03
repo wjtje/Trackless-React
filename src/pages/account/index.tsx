@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Typography, makeStyles, Button } from '@material-ui/core';
+import { Typography, makeStyles, ListItemText, List, ListItem, ListItemIcon } from '@material-ui/core';
 import { serverUrl } from '../../global';
 import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
 import { useFetch } from '../../scripts/ajax';
 import ChangePasswordDialog from './changePassword';
+import {
+  VpnKey as PasswordIcon,
+  GetApp as DownloadIcon,
+} from '@material-ui/icons';
 
 const apiKey = localStorage.getItem('apiKey');
 
@@ -71,8 +75,16 @@ function Page() {
       </table>
 
       <Typography variant="h6" className={classes.spacing}>Options for your account</Typography>
-      <Button variant="contained" className={classes.button} onClick={() => { setPasswordDialog(true); }}>Change my password</Button>
-      <Button variant="contained" className={classes.button}>Download my details</Button>
+      <List>
+        <ListItem button onClick={() => { setPasswordDialog(true); }}>
+          <ListItemIcon><PasswordIcon/></ListItemIcon>
+          <ListItemText primary="Change my password"/>
+        </ListItem>
+        <ListItem button onClick={() => {}}>
+          <ListItemIcon><DownloadIcon/></ListItemIcon>
+          <ListItemText primary="Download my details"/>
+        </ListItem>
+      </List>
 
       <ChangePasswordDialog open={passwordDialog} onClose={setPasswordDialog}/>
     </main>
