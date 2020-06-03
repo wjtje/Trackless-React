@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-d
 import Login from './pages/login';
 import Home from './pages/home';
 import Account from './pages/account';
+import Settings from './pages/settings';
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
+  const locationPath = location.pathname;
 
   return (
     <Router>
@@ -32,11 +34,22 @@ function App() {
 
                 <Route path="/" exact component={() => <Home/>}/>
                 <Route path="/account" exact component={() => <Account/>}/>
+                <Route path="/settings" exact component={() => <Settings/>}/>
               </Switch>
 
               {
-                // Auto redirect to login screen
-                (localStorage.getItem('apiKey') == undefined || localStorage.getItem('apiKey') == "undefined")? <Redirect to="/login"/>:null
+                // Auto redirect to login screen and back to the home screen
+                (
+                  localStorage.getItem('apiKey') == undefined ||
+                  localStorage.getItem('apiKey') == "undefined"
+                )? <Redirect to="/login"/>:null
+              }
+              {
+                (
+                  localStorage.getItem('apiKey') != undefined &&
+                  localStorage.getItem('apiKey') != "undefined" &&
+                  locationPath == "/login"
+                )? <Redirect to="/"/>:null
               }
             </Typography>
           </Container>

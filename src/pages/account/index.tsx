@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { AccountBox as AccountBoxIcon } from '@material-ui/icons';
 import { Typography, makeStyles, Button } from '@material-ui/core';
-import { serverUrl } from '../global';
+import { serverUrl } from '../../global';
 import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
-import { useFetch } from '../scripts/ajax';
-import ChangePasswordDialog from './account/changePassword';
+import { useFetch } from '../../scripts/ajax';
+import ChangePasswordDialog from './changePassword';
 
 const apiKey = localStorage.getItem('apiKey');
 

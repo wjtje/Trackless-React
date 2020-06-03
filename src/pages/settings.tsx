@@ -1,10 +1,26 @@
 import React from 'react';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { ListSubheader, Container, List, ListItem, ListItemText } from '@material-ui/core';
 
-export default {
-  name: 'Settings',
-  icon: <SettingsIcon/>,
-  showInMenu: true,
-  url: '#/settings',
-  page: <h1>Settings</h1>
+// Create the page
+function Page() {
+
+  function resetApp() {
+    localStorage.setItem('apiKey', undefined);
+    location.reload();
+  }
+
+  return (
+    <Container>
+      <List
+        subheader={<ListSubheader>Settings</ListSubheader>}
+      >
+        <ListItem button onClick={resetApp}>
+          <ListItemText primary="Reset app"/>
+        </ListItem>
+      </List>
+    </Container>
+  )
 }
+
+// Export the page
+export default Page;

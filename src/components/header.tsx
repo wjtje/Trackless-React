@@ -1,7 +1,37 @@
 import React, { useState } from "react";
 import { Link, withRouter} from "react-router-dom";
 import { AppBar, Toolbar, Drawer, makeStyles, IconButton, Typography, List, Divider, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { Home as HomeIcon, Menu as MenuIcon, AccountBox as AccountBoxIcon } from '@material-ui/icons';
+import {
+  Home as HomeIcon,
+  Menu as MenuIcon,
+  AccountBox as AccountBoxIcon,
+  Settings as SettingsIcon,
+} from '@material-ui/icons';
+
+// Define menu options
+interface menuOption {
+  url: string;
+  name: string;
+  icon: React.ReactNode;
+}
+
+const menuOptions:Array<menuOption> = [
+  {
+    url: '/',
+    name: 'Home',
+    icon: <HomeIcon/>,
+  },
+  {
+    url: '/account',
+    name: 'Account',
+    icon: <AccountBoxIcon/>,
+  },
+  {
+    url: '/settings',
+    name: 'Settings',
+    icon: <SettingsIcon/>,
+  },
+]
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -65,27 +95,20 @@ function Header() {
           <Typography variant="h6" className={classes.drawerTitle}>Trackless</Typography>
           <Typography variant="body2" className={classes.drawerSubTitle}>Client beta</Typography>
           <Divider/>
-          <Link to="/" className={classes.link}>
-            <ListItem button onClick={() => {
-              setMenuState(false);          // Close the Drawer / menu
-            }}>
-              <ListItemIcon>
-                <HomeIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Home"/>
-            </ListItem>
-          </Link>
-
-          <Link to="/account" className={classes.link}>
-            <ListItem button onClick={() => {
-              setMenuState(false);          // Close the Drawer / menu
-            }}>
-              <ListItemIcon>
-              <AccountBoxIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Account"/>
-            </ListItem>
-          </Link>
+          {
+            menuOptions.map((i) => (
+              <Link to={i.url} className={classes.link} key={i.url}>
+                <ListItem button onClick={() => {
+                  setMenuState(false);          // Close the Drawer / menu
+                }}>
+                  <ListItemIcon>
+                    {i.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={i.name}/>
+                </ListItem>
+              </Link>
+            ))
+          }
         </List>
       </Drawer>
     </nav>
