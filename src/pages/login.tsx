@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import tracklessTheme from '../style/theme';
 import { ThemeProvider, Container, Avatar, makeStyles, Typography, Button, TextField } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import LockIcon from '@material-ui/icons/Lock';
 import $ from 'jquery';
 import { serverUrl } from '../global';
+import PrivacyDialog from './settings/Privacy';
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -27,9 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function () {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+export default function Page() {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const [ dialogOpen, setDialogOpen ] = useState(false);
 
   const singIn = () => {
     // Get the data
@@ -109,7 +111,9 @@ export default function () {
             Sign In
           </Button>
         </form>
+        <Typography variant="body2">If you login you agree to the <a href="#" onClick={() => { setDialogOpen(true) }}>privacy policy</a>.</Typography>
+        <PrivacyDialog open={dialogOpen} onClose={setDialogOpen}/>
       </Container>
     </ThemeProvider>
   )
-};
+}
