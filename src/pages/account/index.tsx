@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
 import { Typography, makeStyles, ListItemText, List, ListItem, ListItemIcon } from '@material-ui/core';
-import { serverUrl } from '../../global';
+import { serverUrl, apiKey } from '../../global';
 import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
 import { useFetch } from '../../scripts/ajax';
 import ChangePasswordDialog from './changePassword';
 import ActiveDevicesDialog from './activeDevices';
+import EditUserDialog from './editUser';
 import {
   VpnKey as PasswordIcon,
   GetApp as DownloadIcon,
   Devices as DevicesIcon,
+  Edit as EditIcon,
 } from '@material-ui/icons';
 
-const apiKey = localStorage.getItem('apiKey');
+// Interfaces
+export interface UserDetails {
+  user_id:   number;
+  firstname: string;
+  lastname:  string;
+  username:  string;
+  group_id:  number;
+  groupName: string;
+}
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -37,17 +47,18 @@ function Page() {
   // Define the states
   const [ passwordDialog, setPasswordDialog ] = useState(false);
   const [ devicesDialog, setDevicesDialog ] = useState(false);
+  const [ userDialog, setUserDialog ] = useState(false);
 
   // get the user data
-  const userDetails = _.get(useFetch(
-    {
-      url: serverUrl + '/user/~',
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
+  const [ data, setData ] = useFetch({
+    url: `${serverUrl}/user/~`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${apiKey}`
     }
-  )[0], 'result[0]', null);
+  });
+
+  const userDetails:UserDetails = _.get(data, 'result[0]', []);
 
   return (
     <main>
@@ -91,10 +102,15 @@ function Page() {
           <ListItemIcon><DownloadIcon/></ListItemIcon>
           <ListItemText primary="Download my details"/>
         </ListItem>
+        <ListItem button onClick={() => { setUserDialog(true); }}>
+          <ListItemIcon><EditIcon/></ListItemIcon>
+          <ListItemText primary="Edit your info"/>
+        </ListItem>
       </List>
 
       <ChangePasswordDialog open={passwordDialog} onClose={setPasswordDialog}/>
       <ActiveDevicesDialog open={devicesDialog} onClose={setDevicesDialog}/>
+      <EditUserDialog open={userDialog} onClose={setUserDialog} updateUser={setData}/>
     </main>
   )
 }
