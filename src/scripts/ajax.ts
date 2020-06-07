@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import $ from 'jquery';
 
-export const useFetch = request => {
+export const useFetch = (request):[any, React.Dispatch<any>] => {
   const [data, setData] = useState(null);   // Use a state for caching the data
 
   async function fetchData() {
@@ -14,5 +15,5 @@ export const useFetch = request => {
     fetchData();
   }, [JSON.stringify(request)]);
 
-  return data;
+  return [data, setData];
 }

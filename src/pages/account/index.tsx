@@ -5,9 +5,11 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import _ from 'lodash';
 import { useFetch } from '../../scripts/ajax';
 import ChangePasswordDialog from './changePassword';
+import ActiveDevicesDialog from './activeDevices';
 import {
   VpnKey as PasswordIcon,
   GetApp as DownloadIcon,
+  Devices as DevicesIcon,
 } from '@material-ui/icons';
 
 const apiKey = localStorage.getItem('apiKey');
@@ -34,6 +36,7 @@ function Page() {
 
   // Define the states
   const [ passwordDialog, setPasswordDialog ] = useState(false);
+  const [ devicesDialog, setDevicesDialog ] = useState(false);
 
   // get the user data
   const userDetails = _.get(useFetch(
@@ -44,7 +47,7 @@ function Page() {
         Authorization: `Bearer ${apiKey}`
       }
     }
-  ), 'result[0]', null);
+  )[0], 'result[0]', null);
 
   return (
     <main>
@@ -80,6 +83,10 @@ function Page() {
           <ListItemIcon><PasswordIcon/></ListItemIcon>
           <ListItemText primary="Change my password"/>
         </ListItem>
+        <ListItem button onClick={() => { setDevicesDialog(true); }}>
+          <ListItemIcon><DevicesIcon/></ListItemIcon>
+          <ListItemText primary="Devices you're logged into"/>
+        </ListItem>
         <ListItem button onClick={() => {}}>
           <ListItemIcon><DownloadIcon/></ListItemIcon>
           <ListItemText primary="Download my details"/>
@@ -87,6 +94,7 @@ function Page() {
       </List>
 
       <ChangePasswordDialog open={passwordDialog} onClose={setPasswordDialog}/>
+      <ActiveDevicesDialog open={devicesDialog} onClose={setDevicesDialog}/>
     </main>
   )
 }

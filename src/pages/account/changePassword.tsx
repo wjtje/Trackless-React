@@ -1,10 +1,8 @@
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
-import { serverUrl } from "../../global";
+import { serverUrl, apiKey } from "../../global";
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from "@material-ui/core";
 import $ from 'jquery';
-
-const apiKey = localStorage.getItem('apiKey');
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
