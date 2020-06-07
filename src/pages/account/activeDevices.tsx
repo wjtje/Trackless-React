@@ -8,6 +8,7 @@ import { serverUrl, apiKey } from "../../global";
 import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
+import { useSnackbar } from "notistack";
 
 // Custom interfaces
 export interface APIDetails {
@@ -29,6 +30,7 @@ export default function ActiveDevices(props: {
   onClose: (state: boolean) => void;
 }) {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Get the api data
   const [data, setData] = useFetch({
@@ -42,12 +44,12 @@ export default function ActiveDevices(props: {
   const apiDetails:Array<APIDetails> = _.get(data, 'result', []);
 
   // Close dialog
-  function handleClose() {
+  const handleClose = () => {
     props.onClose(false);
   }
 
   // Function for removing an apiKey
-  function handleRemove(api_id: number) {
+  const handleRemove = (api_id: number) => {
     // Send command to the server
     $.ajax({
       url: `${serverUrl}/api/${api_id}`,
@@ -55,6 +57,14 @@ export default function ActiveDevices(props: {
       headers: {
         Authorization: `Bearer ${apiKey}`
       }
+    }).done(() => {
+      enqueueSnackbar("Your changes has been saved", {
+        variant: "success"
+      });
+    }).fail((result) => {
+      enqueueSnackbar(`Could not save the changes! (${JSON.parse(result.responseText).message})`, {
+        variant: "warning"
+      });
     });
 
     // Remove from the list
