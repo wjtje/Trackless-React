@@ -58,7 +58,7 @@ function Page() {
     }
   });
 
-  const userDetails:UserDetails = _.get(data, 'result[0]', []);
+  const userDetails:UserDetails = _.get(data, 'result[0]', null);
 
   return (
     <main>
