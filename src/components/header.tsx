@@ -7,12 +7,19 @@ import {
   AccountBox as AccountBoxIcon,
   Settings as SettingsIcon,
 } from '@material-ui/icons';
+import { useFetch } from "../scripts/ajax";
+import _ from 'lodash';
+import { serverUrl, apiKey } from "../global";
 
 // Define menu options
 interface menuOption {
   url: string;
   name: string;
   icon: React.ReactNode;
+  access?: Array<{
+    method: "get" | "post" | "patch" | "delete";
+    url: string;
+  }>
 }
 
 const menuOptions:Array<menuOption> = [
@@ -25,6 +32,12 @@ const menuOptions:Array<menuOption> = [
     url: '/account',
     name: 'Account',
     icon: <AccountBoxIcon/>,
+    access: [
+      {method: "get", url: "/user/~"},
+      {method: "post", url: "/user/~"},
+      {method: "get", url: "/api"},
+      {method: "delete", url: "/api/:api_id"}
+    ]
   },
   {
     url: '/settings',
@@ -75,6 +88,14 @@ function Header() {
   // Define states
   const [menuState, setMenuState] = useState(false);  // Is the Drawer / Menu open?
 
+  const access = _.get(useFetch({
+    url: `${serverUrl}/access/~`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${apiKey}`
+    }
+  })[0], "result", []);
+
   return (
     <nav>
       <AppBar position="static">
@@ -96,18 +117,28 @@ function Header() {
           <Typography variant="body2" className={classes.drawerSubTitle}>Client beta</Typography>
           <Divider/>
           {
-            menuOptions.map((i) => (
-              <Link to={i.url} className={classes.link} key={i.url}>
-                <ListItem button onClick={() => {
-                  setMenuState(false);          // Close the Drawer / menu
-                }}>
-                  <ListItemIcon>
-                    {i.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={i.name}/>
-                </ListItem>
-              </Link>
-            ))
+            menuOptions.map((i:menuOption) => {
+              let haveAccess:boolean = true;
+
+              (_.get(i, 'access', []) as menuOption["access"]).map((j) => {
+                if (!access.some(e => ( e.url == j.url && e.method == j.method ))) {
+                  haveAccess = false;
+                }
+              });
+
+              return (
+                <Link to={i.url} className={classes.link} key={i.url} hidden={!haveAccess}>
+                  <ListItem button onClick={() => {
+                    setMenuState(false);          // Close the Drawer / menu
+                  }}>
+                    <ListItemIcon>
+                      {i.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={i.name}/>
+                  </ListItem>
+                </Link>
+              );
+            })
           }
         </List>
       </Drawer>
