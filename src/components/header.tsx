@@ -6,10 +6,11 @@ import {
   Menu as MenuIcon,
   AccountBox as AccountBoxIcon,
   Settings as SettingsIcon,
+  Group as GroupIcon,
 } from '@material-ui/icons';
 import { useFetch } from "../scripts/ajax";
 import _ from 'lodash';
-import { serverUrl, apiKey } from "../global";
+import { serverUrl, auth } from "../global";
 
 // Define menu options
 interface menuOption {
@@ -37,6 +38,14 @@ const menuOptions:Array<menuOption> = [
       {method: "post", url: "/user/~"},
       {method: "get", url: "/api"},
       {method: "delete", url: "/api/:api_id"}
+    ]
+  },
+  {
+    url: '/users',
+    name: 'Users',
+    icon: <GroupIcon/>,
+    access: [
+      {url: '/user', method: 'get'}
     ]
   },
   {
@@ -91,9 +100,7 @@ function Header() {
   const access = _.get(useFetch({
     url: `${serverUrl}/access/~`,
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${apiKey}`
-    }
+    ...auth
   })[0], "result", []);
 
   return (
