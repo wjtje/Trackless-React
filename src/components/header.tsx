@@ -45,7 +45,8 @@ const menuOptions:Array<menuOption> = [
     name: 'Users',
     icon: <GroupIcon/>,
     access: [
-      {url: '/user', method: 'get'}
+      {url: '/user', method: 'get'},
+      {url: '/user/:user_id', method: 'patch'}
     ]
   },
   {
