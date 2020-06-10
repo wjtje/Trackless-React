@@ -1,6 +1,6 @@
 import { useSnackbar } from "notistack";
 import React from "react";
-import { serverUrl, apiKey } from "../../global";
+import { serverUrl, apiKey, auth } from "../../global";
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from "@material-ui/core";
 import $ from 'jquery';
 import _ from 'lodash';
@@ -69,9 +69,7 @@ export default function EditUserDialog(props: {
     $.ajax({
       url: `${serverUrl}/user/~`,
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      },
+      ...auth,
       data: {
         firstname: userDetails.firstname,
         lastname: userDetails.lastname,
