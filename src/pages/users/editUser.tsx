@@ -48,8 +48,6 @@ export default function EditUserDialog(props: {
     ...auth
   })[0], 'result', []);
 
-  console.log(group);
-
   // Safe the state
   useEffect(() => {
     if (backup.length == 0) {
