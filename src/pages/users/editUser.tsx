@@ -1,9 +1,10 @@
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { serverUrl, auth } from "../../global";
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, Select, InputLabel, MenuItem } from "@material-ui/core";
 import $ from 'jquery';
 import _ from 'lodash';
+import { useFetch } from "../../scripts/ajax";
 
 let backup = [];
 
@@ -21,6 +22,9 @@ export interface UserDetails {
 const useStyles = makeStyles((theme) => ({
   spacing: {
     marginTop: theme.spacing(2),
+  },
+  maxWidth: {
+    width: '100%'
   }
 }));
 
@@ -36,6 +40,15 @@ export default function EditUserDialog(props: {
 
   const userIndex = _.findIndex(props.userDetails, ['user_id', props.user_id]);
   const { enqueueSnackbar } = useSnackbar();
+
+  // Get all the group info
+  const group = _.get(useFetch({
+    url: `${serverUrl}/group`,
+    method: 'get',
+    ...auth
+  })[0], 'result', []);
+
+  console.log(group);
 
   // Safe the state
   useEffect(() => {
@@ -57,6 +70,7 @@ export default function EditUserDialog(props: {
   const handleChange = (key: string) => {
     return function(e) {
       props.userDetails[userIndex][key] = e.target.value;
+      props.userDetails[userIndex].groupName = group[_.findIndex(group, ['group_id', props.userDetails[userIndex].group_id])].groupName;
 
       props.updateState({
         result: props.userDetails
@@ -84,6 +98,17 @@ export default function EditUserDialog(props: {
       enqueueSnackbar("Your changes has been saved", {
         variant: "success"
       });
+    }).fail((result) => {
+      enqueueSnackbar(`Could not save the changes! (${JSON.parse(result.responseText).message})`, {
+        variant: "warning"
+      });
+    });
+
+    // Change the group
+    $.ajax({
+      url: `${serverUrl}/group/${props.userDetails[userIndex].group_id}/${props.userDetails[userIndex].user_id}`,
+      method: 'post',
+      ...auth
     }).fail((result) => {
       enqueueSnackbar(`Could not save the changes! (${JSON.parse(result.responseText).message})`, {
         variant: "warning"
@@ -119,6 +144,19 @@ export default function EditUserDialog(props: {
           fullWidth
           className={classes.spacing}
         />
+        <InputLabel shrink id="select-group" className={classes.spacing}>Group</InputLabel>
+        <Select
+          labelId="select-group"
+          value={_.get(props.userDetails[userIndex], 'group_id', 0)}
+          className={classes.maxWidth}
+          onChange={handleChange('group_id')}
+        >
+          {
+            group.map((i) => (
+              <MenuItem value={i.group_id} key={i.group_id}>{i.groupName}</MenuItem>
+            ))
+          }
+        </Select>
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={handleSave}>
