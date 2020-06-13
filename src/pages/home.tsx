@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import { Home as HomeIcon, Add as AddIcon } from '@material-ui/icons';
-import { Typography, ListItemText, List, ListItem, ListSubheader, makeStyles, Fab } from '@material-ui/core';
-import { serverUrl } from '../global';
-import Skeleton from '@material-ui/lab/Skeleton';
-import $ from 'jquery';
-
-const apiKey = localStorage.getItem('apiKey');
+import React from 'react';
+import { Add as AddIcon } from '@material-ui/icons';
+import { Typography, ListItemText, List, ListItem, makeStyles, Fab } from '@material-ui/core';
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
