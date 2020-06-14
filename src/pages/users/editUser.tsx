@@ -1,10 +1,13 @@
 import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { serverUrl, auth } from "../../global";
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, Select, InputLabel, MenuItem } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, Select, InputLabel, MenuItem, IconButton } from "@material-ui/core";
 import $ from 'jquery';
 import _ from 'lodash';
 import { useFetch } from "../../scripts/ajax";
+import {
+  Delete as DeleteIcon
+} from '@material-ui/icons';
 
 let backup = [];
 
@@ -25,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
   },
   maxWidth: {
     width: '100%'
+  },
+  headerIcon: {
+    float: 'right'
+  },
+  content: {
+    top: -12,
+    position: 'relative'
   }
 }));
 
@@ -34,6 +44,7 @@ export default function EditUserDialog(props: {
   userDetails: Array<UserDetails>;
   user_id: number;
   updateState: (state: any) => void;
+  update: (state: any) => void;
 }) {
   const { open, onClose } = props;
   const classes = useStyles();
@@ -114,11 +125,36 @@ export default function EditUserDialog(props: {
     });
   }
 
+  const handleRemove = () => {
+    onClose(false);  // Close the dialog
+
+    // Push the changes to the server
+    $.ajax({
+      url: `${serverUrl}/user/${props.userDetails[userIndex].user_id}`,
+      method: "delete",
+      ...auth
+    }).done(() => {
+      props.update(new Date().toISOString());
+      enqueueSnackbar("Your changes has been saved", {
+        variant: "success"
+      });
+    }).fail((result) => {
+      enqueueSnackbar(`Could not save the changes! (${JSON.parse(result.responseText).message})`, {
+        variant: "warning"
+      });
+    });
+  }
+
   // Render page
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Change user details</DialogTitle>
-      <DialogContent>
+      <DialogTitle>
+        Change user details
+        <IconButton className={classes.headerIcon} onClick={handleRemove}>
+          <DeleteIcon/>
+        </IconButton>
+      </DialogTitle>
+      <DialogContent className={classes.content}>
         <TextField
           value={_.get(props.userDetails[userIndex], 'firstname', 'No firstname')}
           onChange={handleChange('firstname')}

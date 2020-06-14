@@ -48,6 +48,7 @@ const menuOptions:Array<menuOption> = [
       {url: '/user', method: 'get'},
       {url: '/user', method: 'post'},
       {url: '/user/:user_id', method: 'patch'},
+      {url: '/user/:user_id', method: 'delete'},
       {url: '/group', method: 'get'},
       {url: '/group/:group_id/:user_id', method: 'post'},
     ]

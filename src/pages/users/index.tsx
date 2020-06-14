@@ -57,7 +57,7 @@ function Page() {
         <AddIcon/>
       </Fab>
 
-      <EditUserDialog open={editOpen} onClose={setEditOpen} updateState={setUsersState} userDetails={users} user_id={activeUserId}/>
+      <EditUserDialog open={editOpen} onClose={setEditOpen} updateState={setUsersState} userDetails={users} user_id={activeUserId} update={setUpdateId}/>
       <AddUserDialog open={addOpen} onClose={setAddOpen} userDetails={users} update={setUpdateId}/>
     </main>
   )
