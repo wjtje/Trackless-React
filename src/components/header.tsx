@@ -7,6 +7,7 @@ import {
   AccountBox as AccountBoxIcon,
   Settings as SettingsIcon,
   Group as GroupIcon,
+  Person as PersonIcon,
 } from '@material-ui/icons';
 import { useFetch } from "../scripts/ajax";
 import _ from 'lodash';
@@ -43,7 +44,7 @@ const menuOptions:Array<menuOption> = [
   {
     url: '/users',
     name: 'Users',
-    icon: <GroupIcon/>,
+    icon: <PersonIcon/>,
     access: [
       {url: '/user', method: 'get'},
       {url: '/user', method: 'post'},
@@ -51,6 +52,14 @@ const menuOptions:Array<menuOption> = [
       {url: '/user/:user_id', method: 'delete'},
       {url: '/group', method: 'get'},
       {url: '/group/:group_id/:user_id', method: 'post'},
+    ]
+  },
+  {
+    url: '/group',
+    name: 'Group',
+    icon: <GroupIcon/>,
+    access: [
+      {url: '/group', method: 'get'},
     ]
   },
   {

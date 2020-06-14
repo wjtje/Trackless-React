@@ -9,6 +9,7 @@ import Login from './pages/login';
 import Home from './pages/home';
 import Account from './pages/account';
 import Users from './pages/users';
+import Group from './pages/group';
 import Settings from './pages/settings';
 
 // Define custom style
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/" exact component={() => <Home/>}/>
                 <Route path="/account" exact component={() => <Account/>}/>
                 <Route path="/users" exact component={() => <Users/>}/>
+                <Route path="/group" exact component={() => <Group/>}/>
                 <Route path="/settings" exact component={() => <Settings/>}/>
               </Switch>
 
