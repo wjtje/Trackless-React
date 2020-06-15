@@ -11,12 +11,10 @@ export const auth = {
 export const version = "0.1.0";
 export const NewInThisVersion = () => {
   return (
-    <Typography>
-      <ul>
-        <li>Version option in settings.</li>
-        <li>Able to list all the locations.</li>
-        <li>Able to edit a location.</li>
-      </ul>
-    </Typography>
+    <ul>
+      <Typography component="li">Version option in settings.</Typography>
+      <Typography component="li">Able to list all the locations.</Typography>
+      <Typography component="li">Able to edit a location.</Typography>
+    </ul>
   )
 };
