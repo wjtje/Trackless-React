@@ -1,10 +1,9 @@
 import React from 'react';
-import { ListItem, ListItemText, List, ListSubheader, makeStyles, Fab } from '@material-ui/core';
+import { ListItem, ListItemText, List, ListSubheader } from '@material-ui/core';
 import { serverUrl, auth } from '../../global';
 import _ from 'lodash';
 import { useFetch } from '../../scripts/ajax';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Add as AddIcon } from '@material-ui/icons';
 
 // Interfaces
 export interface Group {
@@ -20,18 +19,8 @@ export interface User {
   username:  string;
 }
 
-const useStyle = makeStyles((theme) => ({
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  }
-}));
-
 // Create the page
 function Page() {
-  const classes = useStyle();
-  
   const [ groupState ] = useFetch({
     url: `${serverUrl}/group`,
     method: 'get',
@@ -52,11 +41,6 @@ function Page() {
           ))
         }
       </List>
-
-      <Fab className={classes.fab} color="primary" aria-label="add" onClick={() => {
-      }}>
-        <AddIcon/>
-      </Fab>
     </main>
   )
 }

@@ -56,7 +56,7 @@ const menuOptions:Array<menuOption> = [
   },
   {
     url: '/group',
-    name: 'Group',
+    name: 'Groups',
     icon: <GroupIcon/>,
     access: [
       {url: '/group', method: 'get'},
