@@ -10,6 +10,7 @@ import Home from './pages/home';
 import Account from './pages/account';
 import Users from './pages/users';
 import Group from './pages/group';
+import Location from './pages/location';
 import Settings from './pages/settings';
 
 // Define custom style
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/account" exact component={() => <Account/>}/>
                 <Route path="/users" exact component={() => <Users/>}/>
                 <Route path="/group" exact component={() => <Group/>}/>
+                <Route path="/location" exact component={() => <Location/>}/>
                 <Route path="/settings" exact component={() => <Settings/>}/>
               </Switch>
 

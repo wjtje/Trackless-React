@@ -8,6 +8,7 @@ import {
   Settings as SettingsIcon,
   Group as GroupIcon,
   Person as PersonIcon,
+  LocationOn as LocationIcon,
 } from '@material-ui/icons';
 import { useFetch } from "../scripts/ajax";
 import _ from 'lodash';
@@ -60,6 +61,14 @@ const menuOptions:Array<menuOption> = [
     icon: <GroupIcon/>,
     access: [
       {url: '/group', method: 'get'},
+    ]
+  },
+  {
+    url: '/location',
+    name: 'Location',
+    icon: <LocationIcon/>,
+    access: [
+      {url: '/location', method: 'get'},
     ]
   },
   {

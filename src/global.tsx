@@ -14,6 +14,7 @@ export const NewInThisVersion = () => {
     <Typography>
       <ul>
         <li>Version option in settings.</li>
+        <li>Able to list all the locations.</li>
       </ul>
     </Typography>
   )
