@@ -3,6 +3,7 @@ import { List, ListSubheader, ListItem, ListItemText, TextField, makeStyles } fr
 import { useFetch } from '../../scripts/ajax';
 import { serverUrl, auth } from '../../global';
 import _ from 'lodash';
+import EditDialog from './editDialog';
 
 // Interfaces
 export interface Location {
@@ -26,17 +27,31 @@ const useStyles = makeStyles((theme) => ({
 function Page() {
   const classes = useStyles();
 
-  const [ searchValue, setSearchValue ] = useState("");
-  let locations:Array<Location> = _.get(useFetch({
+  // Get the data from the server
+  const [ updateId, setUpdateId ] = useState(new Date().toISOString()); // Used for force updating to location state
+  const [ stateLocation ] = useFetch({
     url: `${serverUrl}/location`,
     method: 'get',
-    ...auth
-  })[0], "result", []);
-
-  // Filter array
+    ...auth,
+    data: updateId
+  });
+  let locations:Array<Location> = _.get(stateLocation, "result", []);
+  
+  // Add the search option
+  const [ searchValue, setSearchValue ] = useState("");
   locations = locations.filter((i) => {
     return (i.place.toLowerCase().includes(searchValue.toLowerCase()) || i.name.toLowerCase().includes(searchValue.toLowerCase()));
   });
+
+  // Add the edit option
+  const [ editId, setEditId ] = useState(0);
+  const [ editDialog, setEditDialog ] = useState(false)
+  const handleEdit = (location_id:number) => {
+    return () => {
+      setEditId(location_id);
+      setEditDialog(true);
+    }
+  }
 
   return (
     <main>
@@ -44,12 +59,21 @@ function Page() {
         <TextField label="Search" fullWidth className={classes.search} value={searchValue} onChange={e => {setSearchValue(e.target.value)}}/>
         {
           locations.map((i) => (
-            <ListItem button key={i.location_id}>
+            <ListItem button key={i.location_id} onClick={handleEdit(i.location_id)}>
               <ListItemText primary={`${i.place} - ${i.name}`} secondary={i.id}/>
             </ListItem>
           ))
         }
       </List>
+
+      <EditDialog open={editDialog} onClose={setEditDialog} location={
+        _.get(locations, `[${_.findIndex(locations, ['location_id', editId])}]`, {
+          place: 'No place',
+          name: 'No name',
+          id: 'No id',
+          location_id: 0,
+        })
+      } update={setUpdateId}/>
     </main>
   )
 }
