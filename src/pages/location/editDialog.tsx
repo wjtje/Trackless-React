@@ -96,7 +96,7 @@ export default function EditDialog(props: {
   return (
     <Dialog open={props.open} onClose={handleClose}>
       <DialogTitle>
-        Change user details
+        Change location details
         <IconButton className={classes.headerIcon} onClick={handleRemove}>
           <DeleteIcon/>
         </IconButton>
