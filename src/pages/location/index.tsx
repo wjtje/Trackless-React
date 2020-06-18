@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { List, ListSubheader, ListItem, ListItemText, TextField, makeStyles } from '@material-ui/core';
+import { List, ListSubheader, ListItem, ListItemText, TextField, makeStyles, Fab } from '@material-ui/core';
 import { useFetch } from '../../scripts/ajax';
 import { serverUrl, auth } from '../../global';
 import _ from 'lodash';
 import EditDialog from './editDialog';
+import AddDialog from './addDialog';
+import { Add as AddIcon } from '@material-ui/icons';
 
 // Interfaces
 export interface Location {
@@ -20,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
     width: "calc(100% - 32px)",
-  }
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
 }))
 
 // Create the page
@@ -53,6 +60,12 @@ function Page() {
     }
   }
 
+  // Add the option to add a location
+  const [ addDialog, setAddDialog ] = useState(false);
+  const handleAdd = () => {
+    setAddDialog(true);
+  }
+
   return (
     <main>
       <List subheader={<ListSubheader>Locations</ListSubheader>}>
@@ -65,6 +78,10 @@ function Page() {
           ))
         }
       </List>
+      
+      <Fab className={classes.fab} color="primary" onClick={handleAdd}>
+        <AddIcon/>
+      </Fab>
 
       <EditDialog open={editDialog} onClose={setEditDialog} location={
         _.get(locations, `[${_.findIndex(locations, ['location_id', editId])}]`, {
@@ -74,6 +91,8 @@ function Page() {
           location_id: 0,
         })
       } update={setUpdateId}/>
+
+      <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId}/>
     </main>
   )
 }

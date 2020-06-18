@@ -1,1 +1,5 @@
- - custom one page url system. like site.ga/#/home
+# To-Do
+
+ - Make dialogs fullscreen on mobile
+ - Always check for error's (make the ajax error function global)
+ - Make it an webapp

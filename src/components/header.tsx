@@ -69,6 +69,7 @@ const menuOptions:Array<menuOption> = [
     icon: <LocationIcon/>,
     access: [
       {url: '/location', method: 'get'},
+      {url: '/location', method: 'post'},
       {url: '/location/:location_id', method: 'patch'},
       {url: '/location/:location_id', method: 'delete'},
     ]
