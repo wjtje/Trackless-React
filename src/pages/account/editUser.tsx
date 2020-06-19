@@ -1,7 +1,7 @@
 import { useSnackbar } from "notistack";
 import React from "react";
 import { serverUrl, apiKey, auth } from "../../global";
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery } from "@material-ui/core";
 import $ from 'jquery';
 import _ from 'lodash';
 import { useFetch } from "../../scripts/ajax";
@@ -30,6 +30,8 @@ export default function EditUserDialog(props: {
 }) {
   const { open, onClose } = props;
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
 
   // Get the userdata
@@ -96,7 +98,7 @@ export default function EditUserDialog(props: {
 
   // Render page
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>Change user details</DialogTitle>
       <DialogContent>
         <TextField

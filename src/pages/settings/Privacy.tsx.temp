@@ -1,18 +1,20 @@
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, useTheme, useMediaQuery } from "@material-ui/core";
 
 export default function ChangePasswordDialog(props: {
   open: boolean;
   onClose: (state: boolean) => void;
 }) {
   const { open, onClose } = props;
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleClose = () => {
     onClose(false); // Close the dialog
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>Privacy Policy</DialogTitle>
       <DialogContent>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogActions, DialogTitle, DialogContent, Button, ListItem, List, ListItemText, ListItemSecondaryAction, IconButton, makeStyles } from "@material-ui/core";
+import { Dialog, DialogActions, DialogTitle, DialogContent, Button, ListItem, List, ListItemText, ListItemSecondaryAction, IconButton, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 import {
   Delete as DeleteIcon
 } from '@material-ui/icons';
@@ -9,7 +9,6 @@ import _ from 'lodash';
 import $ from 'jquery';
 import moment from 'moment';
 import { useSnackbar } from "notistack";
-
 // Custom interfaces
 export interface APIDetails {
   api_id:     number;
@@ -30,7 +29,9 @@ export default function ActiveDevices(props: {
   onClose: (state: boolean) => void;
 }) {
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar();0
 
   // Get the api data
   const [data, setData] = useFetch({
@@ -79,7 +80,7 @@ export default function ActiveDevices(props: {
 
   // Create dialog
   return (
-    <Dialog open={props.open} onClose={handleClose}>
+    <Dialog open={props.open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>Active devices</DialogTitle>
       <DialogContent>
         <List>

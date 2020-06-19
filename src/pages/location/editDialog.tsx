@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery } from '@material-ui/core';
 import {
   Delete as DeleteIcon
 } from '@material-ui/icons';
@@ -31,6 +31,8 @@ export default function EditDialog(props: {
   update: (state: string) => void;
 }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const [ place, setPlace ] = useState('No place');
   const [ name, setName ] = useState('No name');
@@ -94,7 +96,7 @@ export default function EditDialog(props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={handleClose}>
+    <Dialog open={props.open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>
         Change location details
         <IconButton className={classes.headerIcon} onClick={handleRemove}>

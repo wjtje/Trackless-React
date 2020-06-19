@@ -1,7 +1,7 @@
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import { serverUrl, apiKey } from "../../global";
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery } from "@material-ui/core";
 import $ from 'jquery';
 
 // Define custom style
@@ -18,6 +18,8 @@ export default function ChangePasswordDialog(props: {
   const { open, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Define custom states
   const [firstPassword, setFirstPassword] = useState('');
@@ -65,7 +67,7 @@ export default function ChangePasswordDialog(props: {
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>Change your password</DialogTitle>
       <DialogContent>
         <TextField

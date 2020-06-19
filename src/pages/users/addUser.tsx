@@ -1,7 +1,7 @@
 import { useSnackbar } from "notistack";
 import React, { useState, useEffect } from "react";
 import { serverUrl, auth } from "../../global";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles, TextField, InputLabel, Select, MenuItem } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, makeStyles, TextField, InputLabel, Select, MenuItem, useTheme, useMediaQuery } from "@material-ui/core";
 import $ from 'jquery';
 import { useFetch } from "../../scripts/ajax";
 import _ from "lodash";
@@ -34,6 +34,8 @@ export default function AddUserDialog(props: {
 }) {
   const { open, onClose } = props;
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const [ values, setValues ] = useState({
     firstname: '',
@@ -109,7 +111,7 @@ export default function AddUserDialog(props: {
 
   // Render page
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>User details</DialogTitle>
       <DialogContent>
         <TextField

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery } from '@material-ui/core';
 import { serverUrl, auth } from '../../global';
 import { useSnackbar } from 'notistack';
 import $ from 'jquery';
@@ -24,6 +24,8 @@ export default function EditDialog(props: {
   update: (state: string) => void;
 }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const [ place, setPlace ] = useState('');
   const [ name, setName ] = useState('');
@@ -59,7 +61,7 @@ export default function EditDialog(props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={handleClose}>
+    <Dialog open={props.open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>
         Add a location
       </DialogTitle>

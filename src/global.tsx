@@ -15,6 +15,8 @@ export const NewInThisVersion = () => {
       <Typography component="li">Version option in settings.</Typography>
       <Typography component="li">Able to list all the locations.</Typography>
       <Typography component="li">Able to edit a location.</Typography>
+      <Typography component="li">Able to add a location.</Typography>
+      <Typography component="li">Dialogs are now fullscreen.</Typography>
     </ul>
   )
 };
