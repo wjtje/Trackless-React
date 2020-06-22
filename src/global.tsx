@@ -8,7 +8,7 @@ export const auth = {
     Authorization: `Bearer ${apiKey}`
   }
 }
-export const version = "0.1.0";
+export const version = "0.1.1";
 export const NewInThisVersion = () => {
   return (
     <ul>
