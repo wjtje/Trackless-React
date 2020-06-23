@@ -6,7 +6,7 @@ import { ThemeProvider, Typography, makeStyles, Container } from "@material-ui/c
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 import Login from './pages/login';
-import Home from './pages/home';
+import Home from './pages/home/index';
 import Account from './pages/account';
 import Users from './pages/users';
 import Group from './pages/group';

@@ -1,6 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Add as AddIcon } from '@material-ui/icons';
 import { Typography, ListItemText, List, ListItem, makeStyles, Fab } from '@material-ui/core';
+import { auth, serverUrl } from '../../global';
+import { useFetch } from '../../scripts/ajax';
+import _ from 'lodash';
+import AddDialog from './addDialog';
+import moment from 'moment';
+
+// Interfaces
+export interface Work {
+  work_id:     number;
+  user:        User;
+  group:       Group;
+  location:    Location;
+  time:        number;
+  date:        string;
+  description: string;
+}
+
+export interface Group {
+  group_id:  number;
+  groupName: string;
+}
+
+export interface Location {
+  location_id: number;
+  place:       string;
+  name:        string;
+  id:          string;
+}
+
+export interface User {
+  user_id:   number;
+  firstname: string;
+  lastname:  string;
+  username:  string;
+}
+
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +80,16 @@ const useStyles = makeStyles((theme) => ({
 // Create the page
 function Page() {
   const classes = useStyles();
+  const [ addDialog, setAddDialog ] = useState(false);
+
+  // Get the data from the server
+  const [ updateId, setUpdateId ] = useState(new Date().toISOString());
+  const workData:Array<Work> = _.get(useFetch({
+    url: `${serverUrl}/work/user/~/${moment().format('YYYY-MM-DD')}/${moment().format('YYYY-MM-DD')}`,
+    method: 'get',
+    ...auth,
+    update: updateId, // A quick way to force reload
+  })[0], 'result', []);
 
   return (
     <main className={classes.root}>
@@ -69,18 +115,24 @@ function Page() {
             </tr>
           </thead>
           <tbody>
-            <tr className={classes.tr}>
-              <Typography variant="body2" component="td" className={classes.tdFirst}>Project home</Typography>
-              <Typography variant="body2" component="td" className={classes.td}>2 uur</Typography>
-              <Typography variant="body2" component="td" className={classes.td}>No idea</Typography>
-            </tr>
+            {workData.map((i) => (
+              <tr className={classes.tr} key={i.work_id}>
+                <Typography variant="body2" component="td" className={classes.tdFirst}>{i.location.place} - {i.location.name}</Typography>
+                <Typography variant="body2" component="td" className={classes.td}>{String(i.time).replace('.',',')} uur</Typography>
+                <Typography variant="body2" component="td" className={classes.td}>{i.description}</Typography>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-      <Fab color="primary" aria-label="add" className={classes.fab}>
+      <Fab color="primary" aria-label="add" className={classes.fab} onClick={() => {
+        setAddDialog(true);
+      }}>
         <AddIcon />
       </Fab>
+
+      <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId}/>
     </main>
   )
 }

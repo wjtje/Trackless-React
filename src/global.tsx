@@ -8,15 +8,11 @@ export const auth = {
     Authorization: `Bearer ${apiKey}`
   }
 }
-export const version = "0.1.1";
+export const version = "0.2-beta.1";
 export const NewInThisVersion = () => {
   return (
     <ul>
-      <Typography component="li">Version option in settings.</Typography>
-      <Typography component="li">Able to list all the locations.</Typography>
-      <Typography component="li">Able to edit a location.</Typography>
-      <Typography component="li">Able to add a location.</Typography>
-      <Typography component="li">Dialogs are now fullscreen.</Typography>
+      <Typography component="li">Able to view and add work</Typography>
     </ul>
   )
 };

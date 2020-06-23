@@ -30,6 +30,10 @@ const menuOptions:Array<menuOption> = [
     url: '/',
     name: 'Home',
     icon: <HomeIcon/>,
+    access: [
+      {method: "get", url: "/work/user/~"},
+      {method: "get", url: "/location"},
+    ]
   },
   {
     url: '/account',
