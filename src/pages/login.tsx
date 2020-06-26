@@ -41,7 +41,7 @@ export default function Page() {
 
     // Send it to the server
     $.ajax({
-      url: serverUrl + '/api',
+      url: serverUrl + '/login',
       method: 'POST',
       data: {
         username: username,
