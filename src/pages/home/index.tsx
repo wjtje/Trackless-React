@@ -85,7 +85,7 @@ function Page() {
   // Get the data from the server
   const [ updateId, setUpdateId ] = useState(new Date().toISOString());
   const workData:Array<Work> = _.get(useFetch({
-    url: `${serverUrl}/work/user/~/${moment().format('YYYY-MM-DD')}/${moment().format('YYYY-MM-DD')}`,
+    url: `${serverUrl}/work/user/~/date/${moment().format('YYYY-MM-DD')}/${moment().format('YYYY-MM-DD')}`,
     method: 'get',
     ...auth,
     update: updateId, // A quick way to force reload

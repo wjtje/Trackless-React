@@ -13,6 +13,7 @@ export const NewInThisVersion = () => {
   return (
     <ul>
       <Typography component="li">Able to view and add work</Typography>
+      <Typography component="li">Updated code to work with server 0.3-beta.1</Typography>
     </ul>
   )
 };

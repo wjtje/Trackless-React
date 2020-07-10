@@ -41,7 +41,7 @@ const menuOptions:Array<menuOption> = [
     icon: <AccountBoxIcon/>,
     access: [
       {method: "get", url: "/user/~"},
-      {method: "post", url: "/user/~"},
+      {method: "patch", url: "/user/~"},
       {method: "get", url: "/api"},
       {method: "delete", url: "/api/:api_id"}
     ]
@@ -56,7 +56,7 @@ const menuOptions:Array<menuOption> = [
       {url: '/user/:user_id', method: 'patch'},
       {url: '/user/:user_id', method: 'delete'},
       {url: '/group', method: 'get'},
-      {url: '/group/:group_id/:user_id', method: 'post'},
+      {url: '/group/:group_id/add/:user_id', method: 'post'},
     ]
   },
   {
@@ -128,7 +128,7 @@ function Header() {
   const [menuState, setMenuState] = useState(false);  // Is the Drawer / Menu open?
 
   const access = _.get(useFetch({
-    url: `${serverUrl}/access/~`,
+    url: `${serverUrl}/access/group/~`,
     method: "GET",
     ...auth
   })[0], "result", []);

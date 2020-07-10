@@ -6,7 +6,9 @@ import {
   Info as InfoIcon,
   Help as PrivacyIcon,
 } from '@material-ui/icons';
-import { version, NewInThisVersion } from '../../global';
+import { version, NewInThisVersion, serverUrl } from '../../global';
+import { useFetch } from '../../scripts/ajax';
+import _ from 'lodash';
 
 // Create the page
 function Page() {
@@ -19,6 +21,12 @@ function Page() {
   }
 
   const handleClose = () => { setVersionOpen(false); };
+
+  // Get the server version
+  const serverVersion = _.get(useFetch({
+    url: `${serverUrl}/server/about`,
+    method: 'get'
+  })[0], 'version', 'Unknown');
   
   return (
     <Container>
@@ -28,6 +36,10 @@ function Page() {
         <ListItem button onClick={() => {setVersionOpen(true)}}>
           <ListItemIcon><InfoIcon/></ListItemIcon>
           <ListItemText primary="Version" secondary={version}/>
+        </ListItem>
+        <ListItem>
+          <ListItemIcon><InfoIcon/></ListItemIcon>
+          <ListItemText primary="Server version" secondary={serverVersion}/>
         </ListItem>
         <ListItem button onClick={resetApp}>
           <ListItemIcon><ResetIcon/></ListItemIcon>
