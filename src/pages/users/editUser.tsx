@@ -117,7 +117,7 @@ export default function EditUserDialog(props: {
 
     // Change the group
     $.ajax({
-      url: `${serverUrl}/group/${props.userDetails[userIndex].group_id}/${props.userDetails[userIndex].user_id}`,
+      url: `${serverUrl}/group/${props.userDetails[userIndex].group_id}/add/${props.userDetails[userIndex].user_id}`,
       method: 'post',
       ...auth
     }).fail((result) => {
