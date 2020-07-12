@@ -33,6 +33,7 @@ const menuOptions:Array<menuOption> = [
     access: [
       {method: "get", url: "/work/user/~"},
       {method: "get", url: "/location"},
+      {method: "post", url: "/work"},
     ]
   },
   {

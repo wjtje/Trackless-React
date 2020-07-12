@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery, MenuItem, Select } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery, MenuItem, Select, IconButton } from '@material-ui/core';
 import { serverUrl, auth } from '../../global';
 import { useSnackbar } from 'notistack';
 import $ from 'jquery';
@@ -11,6 +11,9 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import moment from 'moment';
+import {
+  Delete as DeleteIcon
+} from '@material-ui/icons';
 
 // Interfaces
 export interface Location {
@@ -31,13 +34,25 @@ const useStyles = makeStyles((theme) => ({
   content: {
     top: -12,
     position: 'relative'
-  }
+  },
+  headerIcon: {
+    float: 'right'
+  },
 }));
 
 export default function EditDialog(props: {
   open: boolean;
   onClose: (state: boolean) => void;
   update: (state: string) => void;
+  work: {
+    work_id: number;
+    location: {
+      location_id: number;
+    }
+    time: number | string;
+    date: string;
+    description: string;
+  };
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -57,6 +72,14 @@ export default function EditDialog(props: {
   const [date, setDate] = useState(new Date());
   const [description, setDescription] = useState("");
 
+  // Update states when work changes
+  useEffect(() => {
+    setLocationId(props.work.location.location_id);
+    setTime(String(props.work.time));
+    setDate(new Date(props.work.date));
+    setDescription(props.work.description);
+  }, [props.work]);
+
   // Create handlers
   const handleClose = () => {
     props.onClose(false);
@@ -65,28 +88,32 @@ export default function EditDialog(props: {
   const handleSave = () => {
     props.onClose(false);
 
+    //TODO: patch command
+  }
+
+  const handleRemove = () => {
+    props.onClose(false);  // Close the dialog
+
+    // Remove from the server
     $.ajax({
-      url: `${serverUrl}/work`,
-      method: 'post',
+      url: `${serverUrl}/work/user/~/${props.work.work_id}`,
+      method: 'delete',
       ...auth,
-      data: {
-        location_id: locationId,
-        time: Number(time.replace(',','.')),  // Make time a number
-        date: moment(date).format('YYYY-MM-DD'),
-        description: description,
-      }
     }).done(() => {
       props.update(new Date().toISOString())
       enqueueSnackbar("Your changes has been saved", {
         variant: "success"
       });
-    })
+    });
   }
 
   return (
     <Dialog open={props.open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>
-        What have you done?
+        Change work details
+        <IconButton className={classes.headerIcon} onClick={handleRemove}>
+          <DeleteIcon/>
+        </IconButton>
       </DialogTitle>
       <DialogContent className={classes.content}>
         <Select

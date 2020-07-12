@@ -12,7 +12,7 @@ export const version = "0.2-beta.1";
 export const NewInThisVersion = () => {
   return (
     <ul>
-      <Typography component="li">Able to view and add work</Typography>
+      <Typography component="li">Able to view, add and remove work</Typography>
       <Typography component="li">Updated code to work with server 0.3-beta.1</Typography>
     </ul>
   )

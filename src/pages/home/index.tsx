@@ -6,6 +6,7 @@ import { useFetch } from '../../scripts/ajax';
 import _ from 'lodash';
 import AddDialog from './addDialog';
 import moment from 'moment';
+import EditDialog from './editDialog';
 
 // Interfaces
 export interface Work {
@@ -36,7 +37,6 @@ export interface User {
   lastname:  string;
   username:  string;
 }
-
 
 // Define custom style
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +91,16 @@ function Page() {
     update: updateId, // A quick way to force reload
   })[0], 'result', []);
 
+  // Add the edit option
+  const [ editId, setEditId ] = useState(0);
+  const [ editDialog, setEditDialog ] = useState(false);
+  const handleEdit = (work_id: number) => {
+    return () => {
+      setEditId(work_id);
+      setEditDialog(true);
+    }
+  }
+
   return (
     <main className={classes.root}>
       <Typography variant="h5">What have you done today?</Typography>
@@ -116,7 +126,7 @@ function Page() {
           </thead>
           <tbody>
             {workData.map((i) => (
-              <tr className={classes.tr} key={i.work_id}>
+              <tr className={classes.tr} key={i.work_id} onClick={handleEdit(i.work_id)}>
                 <Typography variant="body2" component="td" className={classes.tdFirst}>{i.location.place} - {i.location.name}</Typography>
                 <Typography variant="body2" component="td" className={classes.td}>{String(i.time).replace('.',',')} uur</Typography>
                 <Typography variant="body2" component="td" className={classes.td}>{i.description}</Typography>
@@ -133,6 +143,17 @@ function Page() {
       </Fab>
 
       <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId}/>
+      <EditDialog open={editDialog} onClose={setEditDialog} update={setUpdateId} work={
+        _.get(workData, `[${_.findIndex(workData, ['work_id', editId])}]`, {
+          work_id: 0,
+          location: {
+            location_id: 0,
+          },
+          time: 0,
+          date: "01-01-2020",
+          description: "No description"
+        })
+      }/>
     </main>
   )
 }
