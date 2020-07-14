@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import $ from 'jquery';
 
-export const useFetch = (request):[any, React.Dispatch<any>] => {
+export const useFetch = (request: JQuery.AjaxSettings<any>):[any, React.Dispatch<any>] => {
   const [data, setData] = useState(null);   // Use a state for caching the data
 
   async function fetchData() {

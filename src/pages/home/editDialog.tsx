@@ -88,7 +88,23 @@ export default function EditDialog(props: {
   const handleSave = () => {
     props.onClose(false);
 
-    //TODO: patch command
+    // Save the changes to the server
+    $.ajax({
+      url: `${serverUrl}/work/user/~/${props.work.work_id}`,
+      method: 'patch',
+      ...auth,
+      data: {
+        location_id: locationId,
+        time: Number(time.replace(',','.')), // Make time a number
+        date: moment(date).format('YYYY-MM-DD'),
+        description: description,
+      },
+    }).done(() => {
+      props.update(new Date().toISOString())
+      enqueueSnackbar("Your changes has been saved", {
+        variant: "success"
+      });
+    });
   }
 
   const handleRemove = () => {

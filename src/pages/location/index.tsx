@@ -40,7 +40,9 @@ function Page() {
     url: `${serverUrl}/location`,
     method: 'get',
     ...auth,
-    data: updateId
+    data: {
+      update: updateId, // Force update
+    },
   });
   let locations:Array<Location> = _.get(stateLocation, "result", []);
   

@@ -80,6 +80,12 @@ export default function EditDialog(props: {
       enqueueSnackbar("Your changes has been saved", {
         variant: "success"
       });
+
+      // Remove state data
+      setLocationId(0);
+      setTime("0");
+      setDate(new Date());
+      setDescription("");
     })
   }
 

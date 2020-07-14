@@ -88,7 +88,9 @@ function Page() {
     url: `${serverUrl}/work/user/~/date/${moment().format('YYYY-MM-DD')}/${moment().format('YYYY-MM-DD')}`,
     method: 'get',
     ...auth,
-    update: updateId, // A quick way to force reload
+    data: {
+      update: updateId, // A quick way to force reload
+    },
   })[0], 'result', []);
 
   // Add the edit option
