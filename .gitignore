@@ -3,3 +3,4 @@ dist
 build
 .cache
 src/pages/settings/Privacy.tsx
+log.md
