@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Add as AddIcon } from '@material-ui/icons';
 import { Typography, ListItemText, List, ListItem, makeStyles, Fab } from '@material-ui/core';
 import { auth, serverUrl } from '../../global';
@@ -7,6 +7,7 @@ import _ from 'lodash';
 import AddDialog from './addDialog';
 import moment from 'moment';
 import EditDialog from './editDialog';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 // Interfaces
 export interface Work {
@@ -26,9 +27,10 @@ export interface Group {
 
 export interface Location {
   location_id: number;
-  place:       string;
-  name:        string;
+  place:       string | JSX.Element;
+  name:        string | JSX.Element;
   id:          string;
+  occurrence?:  number;
 }
 
 export interface User {
@@ -93,6 +95,43 @@ function Page() {
     },
   })[0], 'result', []);
 
+  // Get last used and most used from the server
+  const lastUsed:number = _.get(useFetch({
+    url: `${serverUrl}/location/user/~/last`,
+    method: 'get',
+    ...auth,
+    data: {
+      update: updateId, // A quick way to force reload
+    }
+  })[0], 'location_id', 0);
+
+  const mostUsed:Array<Location> = _.get(useFetch({
+    url: `${serverUrl}/location/user/~/most`,
+    method: 'get',
+    ...auth,
+  })[0], 'location_id', [{
+    // Create a skeleton
+    location_id: 0,
+    name: <Skeleton variant="text" />,
+    place: <Skeleton variant="text" />,
+    id: 0,
+    occurrence: 0,
+  }, {
+    location_id: 1,
+    name: <Skeleton variant="text" />,
+    place: <Skeleton variant="text" />,
+    id: 0,
+    occurrence: 0,
+  }]);
+
+  // State for updating the location id
+  const [locationId, setLocationId] = useState(0);
+
+  // Check for changes in lastUsed
+  useEffect(() => {
+    setLocationId(lastUsed);
+  }, [lastUsed])
+
   // Add the edit option
   const [ editId, setEditId ] = useState(0);
   const [ editDialog, setEditDialog ] = useState(false);
@@ -109,12 +148,14 @@ function Page() {
       <Typography variant="subtitle1">Suggestions</Typography>
 
       <List>
-        <ListItem button>
-          <ListItemText primary="Fam. De Vries" secondary="Location"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Fam. Hoogkamp" secondary="Location"/>
-        </ListItem>
+        {mostUsed.map((i) => (
+          <ListItem button key={i.location_id} onClick={() => {
+            setLocationId(i.location_id);   // Change the locationId
+            setAddDialog(true);             // Show the dialog
+          }}>
+            <ListItemText primary={i.name} secondary={i.place}/>
+          </ListItem>
+        ))}
       </List>
 
       <div className={classes.holder}>
@@ -144,7 +185,7 @@ function Page() {
         <AddIcon />
       </Fab>
 
-      <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId}/>
+      <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId} locationId={locationId}/>
       <EditDialog open={editDialog} onClose={setEditDialog} update={setUpdateId} work={
         _.get(workData, `[${_.findIndex(workData, ['work_id', editId])}]`, {
           work_id: 0,

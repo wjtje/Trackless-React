@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, makeStyles, useTheme, useMediaQuery, MenuItem, Select } from '@material-ui/core';
 import { serverUrl, auth } from '../../global';
 import { useSnackbar } from 'notistack';
@@ -38,6 +38,7 @@ export default function EditDialog(props: {
   open: boolean;
   onClose: (state: boolean) => void;
   update: (state: string) => void;
+  locationId: number;
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -56,6 +57,11 @@ export default function EditDialog(props: {
   const [time, setTime] = useState("0");
   const [date, setDate] = useState(new Date());
   const [description, setDescription] = useState("");
+
+  // Update the state when prop changes
+  useEffect(() => {
+    setLocationId(props.locationId);
+  }, [props.locationId])
 
   // Create handlers
   const handleClose = () => {

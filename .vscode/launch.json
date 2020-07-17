@@ -9,9 +9,9 @@
       "request": "launch",
       "version": "dev",
       "name": "Launch Edge against localhost",
-      "url": "http://localhost:4321",
+      "url": "http://localhost:55567",
       "webRoot": "${workspaceFolder}/dist",
-      "port": 9999
-    },
+      "port": 55566
+    }
   ]
 }
