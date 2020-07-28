@@ -7,7 +7,7 @@ export const useFetch = (request: JQuery.AjaxSettings<any>):[any, React.Dispatch
 
   async function fetchData() {
     await $.ajax(request).done((response) => {
-      setData(JSON.parse(response));
+      setData(response);
     });
   }
 

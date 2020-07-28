@@ -9,6 +9,7 @@ import {
   Group as GroupIcon,
   Person as PersonIcon,
   LocationOn as LocationIcon,
+  DateRange as DateRangeIcon,
 } from '@material-ui/icons';
 import { useFetch } from "../scripts/ajax";
 import _ from 'lodash';
@@ -31,9 +32,28 @@ const menuOptions:Array<menuOption> = [
     name: 'Home',
     icon: <HomeIcon/>,
     access: [
-      {method: "get", url: "/work/user/~"},
+      {method: "get", url: "/work/user/~/date/:start/:end"},
       {method: "get", url: "/location"},
       {method: "post", url: "/work"},
+      {method: "patch", url: "/work/user/~/:work_id"},
+      {method: "delete", url: "/work/user/~/:work_id"},
+      {method: "get", url: "/location/user/~/last"},
+      {method: "get", url: "/work/user/~/:work_id"},
+      {method: "get", url: "/location/user/~/most"},
+    ]
+  },
+  {
+    url: '/thisWeek',
+    name: 'This week',
+    icon: <DateRangeIcon/>,
+    access: [
+      {method: "get", url: "/work/user/~/date/:start/:end"},
+      {method: "get", url: "/location"},
+      {method: "post", url: "/work"},
+      {method: "patch", url: "/work/user/~/:work_id"},
+      {method: "delete", url: "/work/user/~/:work_id"},
+      {method: "get", url: "/location/user/~/last"},
+      {method: "get", url: "/work/user/~/:work_id"},
     ]
   },
   {

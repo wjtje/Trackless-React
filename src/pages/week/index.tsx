@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Add as AddIcon } from '@material-ui/icons';
-import { Typography, ListItemText, List, ListItem, makeStyles, Fab } from '@material-ui/core';
+import { Typography, makeStyles, Fab } from '@material-ui/core';
 import { auth, serverUrl } from '../../global';
 import { useFetch } from '../../scripts/ajax';
 import _ from 'lodash';
-import AddDialog from './addDialog';
+import AddDialog from '../home/addDialog';
 import moment from 'moment';
-import EditDialog from './editDialog';
-import Skeleton from '@material-ui/lab/Skeleton';
 import ListWork from '../../components/listWork';
+import EditDialog from '../home/editDialog';
 
 // Interfaces
 export interface Work {
@@ -84,11 +83,11 @@ const useStyles = makeStyles((theme) => ({
 function Page() {
   const classes = useStyles();
   const [ addDialog, setAddDialog ] = useState(false);
-
-  // Get the data from the server
   const [ updateId, setUpdateId ] = useState(new Date().toISOString());
+
+  // Get the data from the server for the edit work component
   const workData:Array<Work> = _.get(useFetch({
-    url: `${serverUrl}/work/user/~/date/${moment().format('YYYY-MM-DD')}/${moment().format('YYYY-MM-DD')}`,
+    url: `${serverUrl}/work/user/~/date/${moment().day(0).format('YYYY-MM-DD')}/${moment().day(7).format('YYYY-MM-DD')}`,
     method: 'get',
     ...auth,
     data: {
@@ -96,7 +95,7 @@ function Page() {
     },
   })[0], 'result', []);
 
-  // Get last used and most used from the server
+  // Get last used from the server
   const lastUsed:number = _.get(useFetch({
     url: `${serverUrl}/location/user/~/last`,
     method: 'get',
@@ -106,32 +105,13 @@ function Page() {
     }
   })[0], 'location_id', 0);
 
-  const mostUsed:Array<Location> = _.get(useFetch({
-    url: `${serverUrl}/location/user/~/most`,
-    method: 'get',
-    ...auth,
-  })[0], 'location_id', [{
-    // Create a skeleton
-    location_id: 0,
-    name: <Skeleton variant="text" />,
-    place: <Skeleton variant="text" />,
-    id: 0,
-    occurrence: 0,
-  }, {
-    location_id: 1,
-    name: <Skeleton variant="text" />,
-    place: <Skeleton variant="text" />,
-    id: 0,
-    occurrence: 0,
-  }]);
-
   // State for updating the location id
   const [locationId, setLocationId] = useState(0);
 
   // Check for changes in lastUsed
   useEffect(() => {
     setLocationId(lastUsed);
-  }, [lastUsed])
+  }, [lastUsed]);
 
   // Add the edit option
   const [ editId, setEditId ] = useState(0);
@@ -143,24 +123,12 @@ function Page() {
 
   return (
     <main className={classes.root}>
-      <Typography variant="h5">What have you done today?</Typography>
-      <Typography variant="subtitle1">Suggestions</Typography>
-
-      <List>
-        {mostUsed.map((i) => (
-          <ListItem button key={i.location_id} onClick={() => {
-            setLocationId(i.location_id);   // Change the locationId
-            setAddDialog(true);             // Show the dialog
-          }}>
-            <ListItemText primary={i.name} secondary={i.place}/>
-          </ListItem>
-        ))}
-      </List>
+      <Typography variant="h5">This week</Typography>
 
       <div className={classes.holder}>
         <ListWork
-          start={moment().format('YYYY-MM-DD')}
-          end={moment().format('YYYY-MM-DD')}
+          start={moment().day(0).format('YYYY-MM-DD')}
+          end={moment().day(7).format('YYYY-MM-DD')}
           updateId={updateId}
           editWork={handleEdit}
         />

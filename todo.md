@@ -3,3 +3,4 @@
  - Always check for error's (make the ajax error function global)
  - A global language file
  - Better console logging
+ - Fix this scroll bar
