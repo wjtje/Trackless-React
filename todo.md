@@ -4,3 +4,4 @@
  - A global language file
  - Better console logging
  - Fix this scroll bar
+ - Remake the components

@@ -1,73 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
-import { useFetch } from '../scripts/ajax';
-import { serverUrl, auth } from '../global';
-import { Typography, makeStyles } from '@material-ui/core';
+import { useFetch } from '../../scripts/ajax';
+import { serverUrl, auth } from '../../global';
+import { Typography } from '@material-ui/core';
 import moment from 'moment';
-
-// Interfaces
-export interface Work {
-  info:   Info;
-  length: number;
-  result: Result[];
-}
-
-export interface Info {
-  status:  number;
-  message: string;
-}
-
-export interface Result {
-  work_id:     number;
-  user:        User;
-  group:       Group;
-  location:    Location;
-  time:        number;
-  date:        string;
-  description: string;
-}
-
-export interface Group {
-  group_id:  number;
-  groupName: string;
-}
-
-export interface Location {
-  location_id: number;
-  place:       string;
-  name:        string;
-  id:          string;
-}
-
-export interface User {
-  user_id:   number;
-  firstname: string;
-  lastname:  string;
-  username:  string;
-}
-
-// Define custom style
-const useStyles = makeStyles((theme) => ({
-  thead: {
-    fontWeight: 'bold',
-  },
-  td: {
-    padding: '0',
-    paddingRight: theme.spacing(2),
-    minWidth: 38,
-  },
-  tdFirst: {
-    padding: 0,
-    paddingRight: theme.spacing(2),
-    width: 125,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-  },
-  tr: {
-    cursor: 'pointer',
-  },
-}));
+import { useStyles } from './const';
+import { Result } from './interfaces';
 
 // Export component
 export default function ListWork(props: {
