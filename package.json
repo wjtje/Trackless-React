@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/jquery": "^3.3.38",
     "@types/lodash": "^4.14.152",
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.46",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "@typescript-eslint/eslint-plugin": "^3.1.0",
