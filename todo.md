@@ -1,7 +1,7 @@
 # To-Do
 
- - Always check for error's (make the ajax error function global)
- - A global language file
- - Better console logging
- - Fix this scroll bar
- - Remake the components
+ - Global http request error system
+ - Make it that workDialog will push the changes to listWork insted of requesting from the server
+ - Cleanup the ui
+ - Able to list, edit and add users
+ - Able to export work to a pdf using a template

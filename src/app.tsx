@@ -1,70 +1,20 @@
-import React from "react";
-import Header from './components/header';
-import { SnackbarProvider } from "notistack";
-import tracklessTheme from './style/theme';
-import { ThemeProvider, Typography, makeStyles, Container } from "@material-ui/core";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+// Copyright (c) 2020 Wouter van der Wal
 
-import Login from './pages/login';
-import Home from './pages/home';
-import ThisWeek from './pages/week';
-import Account from './pages/account';
-import Users from './pages/users';
-import Group from './pages/group';
-import Location from './pages/location';
-import Settings from './pages/settings';
+import React from 'react'
+import { render } from 'react-dom'
+import {
+  BrowserRouter as Router
+} from 'react-router-dom'
+import RootElement from './components/root'
 
-// Define custom style
-const useStyles = makeStyles((theme) => ({
-  main: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  }
-}));
-
-function App() {
-  const classes = useStyles();
-  const locationPath = location.pathname;
-
+// Create the app
+function App () {
   return (
     <Router>
-      <SnackbarProvider maxSnack={3}>
-        <ThemeProvider theme={tracklessTheme}>
-          <Header/>
-          <Container className={classes.main}>
-            <Typography component="div">
-              <Switch>
-                <Route path="/login" exact component={() => <Login/>}/>
-
-                <Route path="/" exact component={() => <Home/>}/>
-                <Route path="/thisWeek" exact component={() => <ThisWeek/>}/>
-                <Route path="/account" exact component={() => <Account/>}/>
-                <Route path="/users" exact component={() => <Users/>}/>
-                <Route path="/group" exact component={() => <Group/>}/>
-                <Route path="/location" exact component={() => <Location/>}/>
-                <Route path="/settings" exact component={() => <Settings/>}/>
-              </Switch>
-
-              {
-                // Auto redirect to login screen and back to the home screen
-                (
-                  localStorage.getItem('apiKey') == undefined ||
-                  localStorage.getItem('apiKey') == "undefined"
-                )? <Redirect to="/login"/>:null
-              }
-              {
-                (
-                  localStorage.getItem('apiKey') != undefined &&
-                  localStorage.getItem('apiKey') != "undefined" &&
-                  locationPath == "/login"
-                )? <Redirect to="/"/>:null
-              }
-            </Typography>
-          </Container>
-        </ThemeProvider>
-      </SnackbarProvider>
+      <RootElement />
     </Router>
-  );
+  )
 }
 
-export default App;
+// Render the app
+render(<App />, document.getElementById('root'))

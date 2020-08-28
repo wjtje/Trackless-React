@@ -1,72 +1,117 @@
-import React from 'react';
-import _ from 'lodash';
-import { useFetch } from '../../scripts/ajax';
-import { serverUrl, auth } from '../../global';
-import { Typography } from '@material-ui/core';
-import moment from 'moment';
-import { useStyles } from './const';
-import { Result } from './interfaces';
+// Copyright (c) 2020 Wouter van der Wal
 
-// Export component
-export default function ListWork(props: {
-  start: string;
-  end: string;
-  updateId: string;
-  editWork: (work_id: number) => void;
+import React, { useState, useEffect } from 'react'
+import $ from 'jquery'
+import { serverUrl, authHeader } from '../../global'
+import { Work } from '../../@types/interfaces'
+import { Typography } from '@material-ui/core'
+import useStyles from './useStyles'
+import { Skeleton } from '@material-ui/lab'
+import clsx from 'clsx'
+
+export default function ListWork (props: {
+  startDate: string;
+  endDate: string;
+  update?: string;
+  onEdit: (workId: number) => void;
 }) {
-  const classes = useStyles();
+  const classes = useStyles()
 
-  // Get data from server
-  const workData:Array<Result> = _.get(useFetch({
-    url: `${serverUrl}/work/user/~/date/${props.start}/${props.end}`,
+  // Get the data from the server
+  const [parcedData, setParcedData] = useState({} as {
+    [value: string]: Work[];
+  })
+
+  useEffect(() => {
+    $.ajax({
       method: 'get',
-      ...auth,
-      data: {
-        update: props.updateId, // A quick way to force reload
-      },
-  })[0], 'result', []);
+      url: `${serverUrl}/work/user/~/date/${props.startDate}/${props.endDate}`,
+      headers: {
+        ...authHeader,
+        updateId: props.update
+      }
+    }).done((data: Work[]) => {
+      // Sort the data by date
+      const tempBuffer: {
+        [value: string]: Work[];
+      } = {}
 
-  // Parse the data when workData changes
-  const parcedData = {};
-  workData.map((i) => {
-    (parcedData[i.date] == undefined)? parcedData[i.date] = [i] : parcedData[i.date].push(i);
-  });
+      data.forEach((i) => {
+        if (tempBuffer[i.date] === undefined) {
+          tempBuffer[i.date] = [i]
+        } else {
+          tempBuffer[i.date].push(i)
+        }
+      })
 
-  // Render the object
+      setParcedData(tempBuffer)
+    })
+  }, [props.startDate, props.endDate, props.update])
+
   return (
     <table>
-      {Object.keys(parcedData).map((date:string) => (
-        <tbody key={date}>
+      {Object.keys(parcedData).map((date) => (
+        <tbody key={date} className={clsx(classes.spacing, classes.table)}>
           {/* Display the day */}
           <tr>
             <td colSpan={3}>
-              <Typography variant="h6">
-                {moment(date).format("YYYY-MM-DD")}
+              <Typography variant='h6'>
+                {date}
               </Typography>
             </td>
           </tr>
           {/* Display the table header */}
           <tr className={classes.thead}>
-            <td className={classes.tdFirst}><Typography variant="subtitle1" style={{fontWeight: 'bold'}}>Project</Typography></td>
-            <td className={classes.td}><Typography variant="subtitle1" style={{fontWeight: 'bold'}}>Tijd</Typography></td>
-            <td className={classes.td}><Typography variant="subtitle1" style={{fontWeight: 'bold'}}>Opmerkingen</Typography></td>
+            <td className={classes.tdFirst}><Typography variant='subtitle1' className={classes.bold}>Project</Typography></td>
+            <td className={classes.td}><Typography variant='subtitle1' className={classes.bold}>Tijd</Typography></td>
+            <td className={classes.td}><Typography variant='subtitle1' className={classes.bold}>Opmerkingen</Typography></td>
           </tr>
           {/* Display the work */}
-          {parcedData[date].map((i:Result) => (
+          {parcedData[date].map((i) => (
             <tr
               className={classes.tr}
-              key={i.work_id}
+              key={i.workId}
               onClick={() => {
-                props.editWork(i.work_id)
+                props.onEdit(i.workId)
               }}
             >
-              <Typography variant="body2" component="td" className={classes.tdFirst}>{i.location.place} - {i.location.name}</Typography>
-              <Typography variant="body2" component="td" className={classes.td}>{String(i.time).replace('.',',')} uur</Typography>
-              <Typography variant="body2" component="td" className={classes.td}>{i.description}</Typography>
+              <Typography variant='body2' component='td' className={classes.tdFirst}>{i.location.place} - {i.location.name}</Typography>
+              <Typography variant='body2' component='td' className={classes.td}>{String(i.time).replace('.', ',')} uur</Typography>
+              <Typography variant='body2' component='td' className={classes.td}>{i.description}</Typography>
             </tr>
           ))}
         </tbody>
       ))}
+      {/* Create a skeleton */}
+      <tbody
+        className={classes.spacing}
+        style={{
+          display: (Object.keys(parcedData).length === 0) ? 'initial' : 'none'
+        }}
+      >
+        {/* Display the day */}
+        <tr>
+          <td colSpan={3}>
+            <Typography variant='h6'>
+              {props.endDate}
+            </Typography>
+          </td>
+        </tr>
+        {/* Display the table header */}
+        <tr className={classes.thead}>
+          <td className={classes.tdFirst}><Typography variant='subtitle1' className={classes.bold}>Project</Typography></td>
+          <td className={classes.td}><Typography variant='subtitle1' className={classes.bold}>Tijd</Typography></td>
+          <td className={classes.td}><Typography variant='subtitle1' className={classes.bold}>Opmerkingen</Typography></td>
+        </tr>
+        {/* Display a skeleton */}
+        <tr
+          className={classes.tr}
+        >
+          <Typography variant='body2' component='td' className={classes.tdFirst}><Skeleton /></Typography>
+          <Typography variant='body2' component='td' className={classes.td}><Skeleton /></Typography>
+          <Typography variant='body2' component='td' className={classes.td}><Skeleton /></Typography>
+        </tr>
+      </tbody>
     </table>
-  );
+  )
 }

@@ -2,6 +2,10 @@
   "compilerOptions": {
     "jsx": "react",
     "esModuleInterop": true,
-    "lib": ["ES6","DOM"]
+    "lib": ["ES6","DOM"],
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "removeComments": true
   }
 }

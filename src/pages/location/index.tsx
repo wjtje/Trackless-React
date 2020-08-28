@@ -1,103 +1,110 @@
-import React, { useState } from 'react';
-import { List, ListSubheader, ListItem, ListItemText, TextField, makeStyles, Fab } from '@material-ui/core';
-import { useFetch } from '../../scripts/ajax';
-import { serverUrl, auth } from '../../global';
-import _ from 'lodash';
-import EditDialog from './editDialog';
-import AddDialog from './addDialog';
-import { Add as AddIcon } from '@material-ui/icons';
+// Copyright (c) 2020 Wouter van der Wal
 
-// Interfaces
-export interface Location {
-  location_id: number;
-  name:        string;
-  place:       string;
-  id:          string;
-}
+import React, { useState, useEffect } from 'react'
+import { Container, Typography, Fab, ListItem, ListItemText, List, TextField } from '@material-ui/core'
+import useStyles from './useStyles'
+import { Add as AddIcon } from '@material-ui/icons'
+import { Location } from '../../@types/interfaces'
+import { serverUrl, authHeader } from '../../global'
+import { FixedSizeList } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import './style.scss'
+import LocationDialog from '../../components/locationDialog'
+import $ from 'jquery'
 
-// Custom styles
-const useStyles = makeStyles((theme) => ({
-  search: {
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    width: "calc(100% - 32px)",
-  },
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-}))
+export default function TodayPage () {
+  const classes = useStyles()
 
-// Create the page
-function Page() {
-  const classes = useStyles();
+  // Get the user info
+  const [update, setUpdate] = useState(new Date().toISOString())
+  const [data, setData] = useState([] as Location[])
+  useEffect(() => {
+    $.ajax({
+      url: `${serverUrl}/location`,
+      headers: {
+        ...authHeader,
+        update: update
+      }
+    }).done((e) => {
+      setData(e)
+    })
+  }, [update])
 
-  // Get the data from the server
-  const [ updateId, setUpdateId ] = useState(new Date().toISOString()); // Used for force updating to location state
-  const [ stateLocation ] = useFetch({
-    url: `${serverUrl}/location`,
-    method: 'get',
-    ...auth,
-    data: {
-      update: updateId, // Force update
-    },
-  });
-  let locations:Array<Location> = _.get(stateLocation, "result", []);
-  
-  // Add the search option
-  const [ searchValue, setSearchValue ] = useState("");
-  locations = locations.filter((i) => {
-    return (i.place.toLowerCase().includes(searchValue.toLowerCase()) || i.name.toLowerCase().includes(searchValue.toLowerCase()));
-  });
+  const [search, setSearch] = useState('')
+  const [locations, setLocation] = useState([] as Location[])
 
-  // Add the edit option
-  const [ editId, setEditId ] = useState(0);
-  const [ editDialog, setEditDialog ] = useState(false)
-  const handleEdit = (location_id:number) => {
-    return () => {
-      setEditId(location_id);
-      setEditDialog(true);
-    }
+  // Update locations when data or search changes
+  useEffect(() => {
+    const s = search.toLowerCase()
+
+    setLocation(data.filter(location => {
+      // Search array
+      return (
+        location.place.toLowerCase().indexOf(s) !== -1 ||
+        location.name.toLowerCase().indexOf(s) !== -1 ||
+        location.id.toLowerCase().indexOf(s) !== -1
+      )
+    }))
+  }, [search, data])
+
+  // States and function for the dialog
+  const [open, setOpen] = useState(false)
+  const [locationId, setLocationId] = useState(0)
+  const onClose = () => {
+    setOpen(false)
   }
-
-  // Add the option to add a location
-  const [ addDialog, setAddDialog ] = useState(false);
-  const handleAdd = () => {
-    setAddDialog(true);
+  const onSave = () => {
+    // Update the locations
+    setUpdate(new Date().toISOString())
   }
 
   return (
-    <main>
-      <List subheader={<ListSubheader>Locations</ListSubheader>}>
-        <TextField label="Search" fullWidth className={classes.search} value={searchValue} onChange={e => {setSearchValue(e.target.value)}}/>
-        {
-          locations.map((i) => (
-            <ListItem button key={i.location_id} onClick={handleEdit(i.location_id)}>
-              <ListItemText primary={`${i.place} - ${i.name}`} secondary={i.id}/>
-            </ListItem>
-          ))
-        }
+    <Container className={classes.main}>
+      <Typography variant='h5'>Locations</Typography>
+
+      <List className='list'>
+        <TextField label='search' fullWidth className={classes.search} value={search} onChange={e => setSearch(e.target.value)} />
+        <AutoSizer>
+          {({ height, width }) => (
+            <FixedSizeList
+              height={height}
+              width={width}
+              itemSize={56}
+              itemCount={locations.length}
+            >
+              {({ index, style }) => (
+                <ListItem
+                  key={locations[index].locationId}
+                  style={style}
+                  button
+                  onClick={() => {
+                    // Set the correct id
+                    setLocationId(locations[index].locationId)
+                    setOpen(true)
+                  }}
+                >
+                  <ListItemText primary={`${locations[index].place} - ${locations[index].name}`} secondary={locations[index].id} />
+                </ListItem>
+              )}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
       </List>
-      
-      <Fab className={classes.fab} color="primary" onClick={handleAdd}>
-        <AddIcon/>
+
+      <Fab
+        color='primary'
+        aria-label='add'
+        className={classes.fab}
+        onClick={() => {
+          // Disable editing and show the dialog
+          setLocationId(0)
+          setOpen(true)
+        }}
+      >
+        <AddIcon />
       </Fab>
 
-      <EditDialog open={editDialog} onClose={setEditDialog} location={
-        _.get(locations, `[${_.findIndex(locations, ['location_id', editId])}]`, {
-          place: 'No place',
-          name: 'No name',
-          id: 'No id',
-          location_id: 0,
-        })
-      } update={setUpdateId}/>
-
-      <AddDialog open={addDialog} onClose={setAddDialog} update={setUpdateId}/>
-    </main>
+      <LocationDialog open={open} onClose={onClose} onSave={onSave} locationId={locationId} />
+    </Container>
   )
 }
-
-// Export the page
-export default Page;

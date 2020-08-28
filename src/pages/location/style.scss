@@ -1,0 +1,15 @@
+.list {
+  height: calc(100vh - 176px);
+}
+
+@media (min-width:0px) and (orientation: landscape) {
+  .list {
+    height: calc(100vh - 186px);
+  }
+}
+
+@media (min-width:600px) {
+  .list {
+    height: calc(100vh - 185px);
+  }
+}

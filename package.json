@@ -1,18 +1,19 @@
 {
   "name": "trackless-client",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "parcel serve src/index.html -p 55567",
-    "build": "parcel build -d build --no-source-maps --public-url . src/index.html"
+    "build": "parcel build -d build --no-source-maps --public-url . src/index.html",
+    "test": "standardx **/*.ts **/*.tsx"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wjtje/Trackless.git"
   },
   "author": "Wjtje",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/wjtje/Trackless/issues"
   },
@@ -23,12 +24,16 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
-    "@typescript-eslint/eslint-plugin": "^3.1.0",
-    "@typescript-eslint/parser": "^3.1.0",
-    "eslint": "^7.1.0",
-    "eslint-plugin-react": "^7.20.0",
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "@types/react-window": "^1.8.2",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "eslint": "^7.7.0",
+    "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.0.4",
     "parcel-bundler": "^1.12.4",
+    "sass": "^1.26.10",
+    "standardx": "^5.0.0",
     "typescript": "^3.9.3"
   },
   "dependencies": {
@@ -37,6 +42,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/pickers": "^3.2.10",
+    "clsx": "^1.1.1",
     "date-fns": "^2.14.0",
     "jquery": "^3.5.1",
     "lodash": "^4.17.19",
@@ -44,6 +50,22 @@
     "notistack": "^0.9.16",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.8.5",
+    "tslib": "^2.0.1",
+    "use-http": "^1.0.13"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "error"
+    }
+  },
+  "standardx": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint/eslint-plugin"
+    ]
   }
 }
