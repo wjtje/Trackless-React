@@ -12,7 +12,7 @@ Keep track of what your employees have done
 
 ## Installation
 
-You need a working Trackless-server.
+You need a working Trackless-server and nodejs installation.
 
 Run the `npm install` command to install all the needed packages
 
