@@ -17,7 +17,7 @@ export default function TodayPage () {
 
   // Get the user info
   const [update, setUpdate] = useState(new Date().toISOString())
-  const [data, setData] = useState([] as Location[])
+  const [data, setData] = useState([] as Array<Location>)
   useEffect(() => {
     $.ajax({
       url: `${serverUrl}/location`,
