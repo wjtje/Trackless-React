@@ -10,6 +10,7 @@ import AccountPage from '../../pages/account'
 import ThisWeekPage from '../../pages/thisWeek'
 import LocationPage from '../../pages/location'
 import LoginPage from '../../pages/login'
+import UserPage from '../../pages/user'
 
 export default function RootElement () {
   // Go to the login page
@@ -38,6 +39,7 @@ export default function RootElement () {
         <Route path='/thisWeek' exact component={() => <ThisWeekPage />} />
         <Route path='/location' exact component={() => <LocationPage />} />
         <Route path='/login' exact component={() => <LoginPage />} />
+        <Route path='/user' exact component={() => <UserPage />} />
       </Switch>
     </SnackbarProvider>
   )

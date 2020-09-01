@@ -11,7 +11,8 @@ import {
   Settings as SettingsIcon,
   AccountBox as AccountBoxIcon,
   DateRange as DateRangeIcon,
-  LocationOn as LocationOnIcon
+  LocationOn as LocationOnIcon,
+  People as PeopleIcon
 } from '@material-ui/icons'
 
 export default function Drawer (props: {
@@ -52,6 +53,13 @@ export default function Drawer (props: {
           <ListItem button>
             <ListItemIcon><LocationOnIcon /></ListItemIcon>
             <ListItemText primary='Location' />
+          </ListItem>
+        </Link>
+
+        <Link to='/user' className={classes.link} onClick={props.onClose}>
+          <ListItem button>
+            <ListItemIcon><PeopleIcon /></ListItemIcon>
+            <ListItemText primary='Users' />
           </ListItem>
         </Link>
 
