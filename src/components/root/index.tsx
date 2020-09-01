@@ -12,6 +12,7 @@ import LocationPage from '../../pages/location'
 import LoginPage from '../../pages/login'
 import UserPage from '../../pages/user'
 import ExportPage from '../../pages/export'
+import HistoryPage from '../../pages/history'
 
 export default function RootElement () {
   // Go to the login page
@@ -42,6 +43,7 @@ export default function RootElement () {
         <Route path='/login' exact component={() => <LoginPage />} />
         <Route path='/user' exact component={() => <UserPage />} />
         <Route path='/export' exact component={() => <ExportPage />} />
+        <Route path='/history' exact component={() => <HistoryPage />} />
       </Switch>
     </SnackbarProvider>
   )

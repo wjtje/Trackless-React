@@ -5,3 +5,4 @@ export const authHeader = {
   Authorization: `Bearer ${localStorage.getItem('apiKey')}`
 }
 export const version = '0.3-beta.0'
+export const systemEmail = 'info@company.com'

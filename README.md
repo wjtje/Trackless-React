@@ -14,7 +14,9 @@ Keep track of what your employees have done
 
 You need a working Trackless-server and nodejs installation.
 
-Run the `npm install` command to install all the needed packages
+Run the `npm install` command to install all the needed packages.
+
+Edit the `src/global.ts` with your infomation.
 
 Then run the `npm run build` command to build the project.
 

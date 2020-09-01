@@ -93,7 +93,7 @@ export default function ListWork (props: {
         <tr>
           <td colSpan={3}>
             <Typography variant='h6'>
-              {props.endDate}
+              {props.startDate}
             </Typography>
           </td>
         </tr>

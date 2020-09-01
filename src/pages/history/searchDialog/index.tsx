@@ -9,17 +9,15 @@ import {
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 import moment from 'moment'
-import { useSnackbar } from 'notistack'
 
-export default function ExportDialog (props: {
+export default function SearchDialog (props: {
   open: boolean;
   onClose: () => void;
-  onExport: (startDate:string, endDate: string) => void;
+  onChange: (startDate:string, endDate: string) => void;
 }) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = useStyles()
-  const { enqueueSnackbar } = useSnackbar()
 
   // States for the inputs
   const [startDate, setStartDate] = useState(new Date(moment().day(-7).format('YYYY-MM-DD')))
@@ -28,19 +26,13 @@ export default function ExportDialog (props: {
   // Event handlers
   const onSave = () => {
     props.onClose()
-    props.onExport(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
-
-    // Show a toast
-    enqueueSnackbar('Started downloading', {
-      variant: 'success',
-      autoHideDuration: 2000
-    })
+    props.onChange(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
   }
 
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
       <DialogTitle>
-        Export to pdf
+        What do you want to see?
       </DialogTitle>
       <DialogContent>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -64,7 +56,7 @@ export default function ExportDialog (props: {
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={onSave}>
-          Download
+          Search
         </Button>
         <Button color='primary' onClick={props.onClose}>
           Close
