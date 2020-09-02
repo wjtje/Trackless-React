@@ -8,13 +8,16 @@ import {
 import RootElement from './components/root'
 import { ThemeProvider } from '@material-ui/core'
 import theme from './theme'
+import { SnackbarProvider } from 'notistack'
 
 // Create the app
 function App () {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <RootElement />
+        <SnackbarProvider maxSnack={3}>
+          <RootElement />
+        </SnackbarProvider>
       </ThemeProvider>
     </Router>
   )

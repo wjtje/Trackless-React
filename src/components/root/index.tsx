@@ -3,7 +3,7 @@
 import React from 'react'
 import AppBar from '../appBar'
 import TodayPage from '../../pages/today'
-import { SnackbarProvider } from 'notistack'
+import { useSnackbar } from 'notistack'
 import { Switch, Route } from 'react-router-dom'
 import SettingsPage from '../../pages/settings'
 import AccountPage from '../../pages/account'
@@ -13,8 +13,11 @@ import LoginPage from '../../pages/login'
 import UserPage from '../../pages/user'
 import ExportPage from '../../pages/export'
 import HistoryPage from '../../pages/history'
+import $ from 'jquery'
 
 export default function RootElement () {
+  const { enqueueSnackbar } = useSnackbar()
+
   // Go to the login page
   if (
     window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login' &&
@@ -31,8 +34,16 @@ export default function RootElement () {
     window.location.href = '/'
   }
 
+  // Define global error
+  $(document).ajaxError((event, xhr) => {
+    enqueueSnackbar(`Connection error (${xhr.responseJSON?.code})`, {
+      variant: 'error',
+      autoHideDuration: 10000
+    })
+  })
+
   return (
-    <SnackbarProvider maxSnack={3}>
+    <div>
       <AppBar />
       <Switch>
         <Route path='/' exact component={() => <TodayPage />} />
@@ -45,6 +56,6 @@ export default function RootElement () {
         <Route path='/export' exact component={() => <ExportPage />} />
         <Route path='/history' exact component={() => <HistoryPage />} />
       </Switch>
-    </SnackbarProvider>
+    </div>
   )
 }
