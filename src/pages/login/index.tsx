@@ -43,7 +43,7 @@ export default function TodayPage () {
 
   return (
     <Container
-      className={classes.main}
+      className={classes.main + ' container'}
       maxWidth='sm'
       component='main'
     >

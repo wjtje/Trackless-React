@@ -18,7 +18,7 @@ export default function RootElement () {
   // Go to the login page
   if (
     window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login' &&
-    localStorage.getItem('apiKey') === null
+    window.localStorage.getItem('apiKey') === null
   ) {
     window.location.href = '/login'
   }
@@ -26,7 +26,7 @@ export default function RootElement () {
   // Go to the homepage
   if (
     window.location.href.split('/')[window.location.href.split('/').length - 1] === 'login' &&
-    localStorage.getItem('apiKey') !== null
+    window.localStorage.getItem('apiKey') !== null
   ) {
     window.location.href = '/'
   }

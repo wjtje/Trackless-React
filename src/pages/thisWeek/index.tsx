@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState } from 'react'
-import { Container, Typography, Fab } from '@material-ui/core'
+import { Container, Typography, Fab, Zoom } from '@material-ui/core'
 import useStyles from './useStyles'
 import ListWork from '../../components/listWork'
 import moment from 'moment'
@@ -33,22 +33,25 @@ export default function ThisWeekPage () {
 
   return (
     <Container className={classes.main}>
-      <Typography variant='h5'>What have you done today?</Typography>
+      <Typography variant='h5'>What have you done this week?</Typography>
 
       <ListWork startDate={moment().day(0).format('YYYY-MM-DD')} endDate={moment().day(7).format('YYYY-MM-DD')} update={updateListWork} onEdit={onEdit} />
 
-      <Fab
-        color='primary'
-        aria-label='add'
-        className={classes.fab}
-        onClick={() => {
-          // Disable editing and show workDialog
-          setEditWorkId(0)
-          setWorkDialog(true)
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Disable editing and show workDialog
+            setEditWorkId(0)
+            setWorkDialog(true)
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
+
       <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} workId={editWorkId} />
     </Container>
   )

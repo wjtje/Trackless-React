@@ -154,7 +154,8 @@ export default function Drawer (props: {
           hidden={(
             access.indexOf('trackless.location.read') === -1 ||
             access.indexOf('trackless.location.remove') === -1 ||
-            access.indexOf('trackless.location.edit') === -1
+            access.indexOf('trackless.location.edit') === -1 ||
+            access.indexOf('trackless.location.create') === -1
           )}
         >
           <ListItem button>

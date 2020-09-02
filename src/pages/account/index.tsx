@@ -16,6 +16,7 @@ import $ from 'jquery'
 import ChangePassword from './dialogs/changePassword'
 import EditUser from './dialogs/editUser'
 import DownloadDetails from './dialogs/downloadInfo'
+import ActiveDevices from './dialogs/activeDevices'
 
 export default function AccountPage () {
   const classes = useStyles()
@@ -38,9 +39,10 @@ export default function AccountPage () {
   const [openPassword, setOpenPassword] = useState(false)
   const [openDownload, setOpenDownload] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
+  const [openActiveDevices, setOpenActiveDevices] = useState(false)
 
   return (
-    <Container className={classes.main}>
+    <Container className={classes.main + ' container'}>
       <Typography variant='h5'>{(data[0] === undefined) ? <Skeleton /> : `Welcome ${data[0].firstname} ${data[0].lastname}`}</Typography>
 
       <Typography variant='h6' className={classes.spacing}>Your details</Typography>
@@ -79,7 +81,7 @@ export default function AccountPage () {
           <ListItemIcon><PasswordIcon /></ListItemIcon>
           <ListItemText primary='Change my password' />
         </ListItem>
-        <ListItem button onClick={() => { }}>
+        <ListItem button onClick={() => { setOpenActiveDevices(true) }}>
           <ListItemIcon><DevicesIcon /></ListItemIcon>
           <ListItemText primary='Devices you&#39;re logged into' />
         </ListItem>
@@ -117,6 +119,12 @@ export default function AccountPage () {
         userInfo={{
           firstname: data[0]?.firstname || 'Jhon',
           lastname: data[0]?.lastname || 'Doe'
+        }}
+      />
+      <ActiveDevices
+        open={openActiveDevices}
+        onClose={() => {
+          setOpenActiveDevices(false)
         }}
       />
     </Container>

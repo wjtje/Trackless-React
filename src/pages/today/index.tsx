@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState } from 'react'
-import { Container, List, ListItem, ListItemText, Typography, Fab } from '@material-ui/core'
+import { Container, List, ListItem, ListItemText, Typography, Fab, Zoom } from '@material-ui/core'
 import useStyles from './useStyles'
 import ListWork from '../../components/listWork'
 import moment from 'moment'
@@ -48,7 +48,7 @@ export default function TodayPage () {
   }
 
   return (
-    <Container className={classes.main}>
+    <Container className={classes.main + ' container'}>
       <Typography variant='h5'>What have you done today?</Typography>
       <Typography variant='subtitle1'>Suggestions</Typography>
 
@@ -70,18 +70,21 @@ export default function TodayPage () {
 
       <ListWork startDate={moment().format('YYYY-MM-DD')} endDate={moment().format('YYYY-MM-DD')} update={updateListWork} onEdit={onEdit} />
 
-      <Fab
-        color='primary'
-        aria-label='add'
-        className={classes.fab}
-        onClick={() => {
-          // Disable editing and show workDialog
-          setEditWorkId(0)
-          setWorkDialog(true)
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Disable editing and show workDialog
+            setEditWorkId(0)
+            setWorkDialog(true)
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
+
       <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} locationId={mostUsedLocationId} workId={editWorkId} />
     </Container>
   )

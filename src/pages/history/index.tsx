@@ -1,13 +1,13 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState } from 'react'
-import { Container, Typography, Fab } from '@material-ui/core'
+import { Container, Typography, Fab, Zoom } from '@material-ui/core'
 import useStyles from './useStyles'
 import ListWork from '../../components/listWork'
 import moment from 'moment'
 import WorkDialog from '../../components/workDialog'
 import { Search as SearchIcon } from '@material-ui/icons'
-import SearchDialog from './searchDialog'
+import SearchDialog from '../../components/searchDialog'
 
 export default function HistoryPage () {
   const classes = useStyles()
@@ -40,21 +40,24 @@ export default function HistoryPage () {
   const [openSearch, setOpenSearch] = useState(false)
 
   return (
-    <Container className={classes.main}>
+    <Container className={classes.main + ' container'}>
       <Typography variant='h5'>What have you done in the past?</Typography>
 
       <ListWork startDate={startDate} endDate={endDate} update={updateListWork} onEdit={onEdit} />
 
-      <Fab
-        color='primary'
-        aria-label='add'
-        className={classes.fab}
-        onClick={() => {
-          setOpenSearch(true)
-        }}
-      >
-        <SearchIcon />
-      </Fab>
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            setOpenSearch(true)
+          }}
+        >
+          <SearchIcon />
+        </Fab>
+      </Zoom>
+
       <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} workId={editWorkId} />
       <SearchDialog
         open={openSearch}

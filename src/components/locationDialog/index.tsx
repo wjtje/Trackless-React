@@ -7,6 +7,7 @@ import { serverUrl, authHeader } from '../../global'
 import $ from 'jquery'
 import { Location } from '../../@types/interfaces'
 import { useSnackbar } from 'notistack'
+import RemoveDialog from '../RemoveDialog'
 
 export default function LocationDialog (props: {
   open: boolean;
@@ -81,8 +82,11 @@ export default function LocationDialog (props: {
   }
 
   // Remove the item from the server
+  const [open, setOpen] = useState(false)
   const onRemove = () => {
     props.onClose()
+
+    setOpen(false)
 
     // Push data to the server
     $.ajax({
@@ -95,7 +99,7 @@ export default function LocationDialog (props: {
       props.onSave()
 
       // Show a toast
-      enqueueSnackbar('Saved!', {
+      enqueueSnackbar('Removed!', {
         variant: 'success',
         autoHideDuration: 2000
       })
@@ -108,50 +112,54 @@ export default function LocationDialog (props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
-      <DialogTitle>
-        Location
-      </DialogTitle>
-      <DialogContent>
-        <TextField
-          value={place}
-          onChange={e => setPlace(e.target.value)}
-          label='Place'
-          type='text'
-          fullWidth
-        />
+    <div>
+      <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
+        <DialogTitle>
+          Location
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            value={place}
+            onChange={e => setPlace(e.target.value)}
+            label='Place'
+            type='text'
+            fullWidth
+          />
 
-        <TextField
-          value={name}
-          onChange={e => setName(e.target.value)}
-          label='Name'
-          type='text'
-          fullWidth
-          className={classes.spacing}
-        />
+          <TextField
+            value={name}
+            onChange={e => setName(e.target.value)}
+            label='Name'
+            type='text'
+            fullWidth
+            className={classes.spacing}
+          />
 
-        <TextField
-          value={id}
-          onChange={e => setId(e.target.value)}
-          label='Id'
-          type='text'
-          fullWidth
-          className={classes.spacing}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Typography component='div' hidden={props.locationId === undefined || props.locationId === 0}>
-          <Button color='secondary' onClick={onRemove}>
-            Remove
+          <TextField
+            value={id}
+            onChange={e => setId(e.target.value)}
+            label='Id'
+            type='text'
+            fullWidth
+            className={classes.spacing}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Typography component='div' hidden={props.locationId === undefined || props.locationId === 0}>
+            <Button color='secondary' onClick={() => { setOpen(true) }}>
+              Remove
+            </Button>
+          </Typography>
+          <Button color='primary' onClick={onSave}>
+            Save
           </Button>
-        </Typography>
-        <Button color='primary' onClick={onSave}>
-          Save
-        </Button>
-        <Button color='primary' onClick={props.onClose}>
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <Button color='primary' onClick={props.onClose}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <RemoveDialog open={open} onClose={() => { setOpen(false) }} onRemove={onRemove} />
+    </div>
   )
 }

@@ -13,7 +13,7 @@ export default function SettingsPage () {
   const { data, loading } : { loading: boolean; data: { version: string; }|undefined; } = useFetch(`${serverUrl}/server/about`, {}, [])
 
   return (
-    <Container className={classes.main}>
+    <Container className={classes.main + ' container'}>
       <Typography variant='h5'>Settings</Typography>
       <Typography variant='subtitle1'>About</Typography>
       <List>

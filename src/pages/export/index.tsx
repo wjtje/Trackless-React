@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Container, Typography, List, TextField, ListItem, ListItemText, Fab } from '@material-ui/core'
+import { Container, Typography, List, TextField, ListItem, ListItemText, Fab, Zoom } from '@material-ui/core'
 import useStyles from './useStyles'
 import { serverUrl, authHeader } from '../../global'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -13,6 +13,7 @@ import ExportDialog from '../../components/exportDialog'
 import { jsPDF as JSPDF } from 'jspdf'
 import { GetApp as DownloadIcon } from '@material-ui/icons'
 import moment from 'moment'
+import ListSkeleton from '../../components/ListSkeleton'
 
 export default function ExportPage () {
   const classes = useStyles()
@@ -93,12 +94,13 @@ export default function ExportPage () {
 
       <List className='list'>
         <TextField
-          label='search'
+          label='Search'
           fullWidth
           className={classes.search}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        {(users.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList
@@ -133,22 +135,24 @@ export default function ExportPage () {
         </AutoSizer>
       </List>
 
-      <Fab
-        color='primary'
-        aria-label='add'
-        className={classes.fab}
-        onClick={() => {
-          // Download all users
-          setDownloadId(0)
-          setUserInfo({
-            firstname: 'Jhon',
-            lastname: 'Doe'
-          })
-          setOpen(true)
-        }}
-      >
-        <DownloadIcon />
-      </Fab>
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Download all users
+            setDownloadId(0)
+            setUserInfo({
+              firstname: 'Jhon',
+              lastname: 'Doe'
+            })
+            setOpen(true)
+          }}
+        >
+          <DownloadIcon />
+        </Fab>
+      </Zoom>
 
       <ExportDialog open={open} onClose={onClose} onExport={onExport} />
     </Container>

@@ -1,17 +1,4 @@
 {
-  "env": {
-    "es6": true,
-    "node": true
-  },
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:react-hooks/recommended"
-  ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -20,6 +7,11 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:react-hooks/recommended"
+  ],
   "plugins": [
     "react",
     "@typescript-eslint"

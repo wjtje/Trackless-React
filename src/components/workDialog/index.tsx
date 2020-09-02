@@ -14,6 +14,7 @@ import moment from 'moment'
 import $ from 'jquery'
 import { Location, Work } from '../../@types/interfaces'
 import { useSnackbar } from 'notistack'
+import RemoveDialog from '../RemoveDialog'
 
 export default function AddWork (props: {
   open: boolean;
@@ -117,7 +118,10 @@ export default function AddWork (props: {
   }
 
   // Remove the item from the server
+  const [open, setOpen] = useState(false)
   const onRemove = () => {
+    setOpen(false)
+
     props.onClose()
 
     // Push data to the server
@@ -131,7 +135,7 @@ export default function AddWork (props: {
       props.onSave()
 
       // Show a toast
-      enqueueSnackbar('Saved!', {
+      enqueueSnackbar('Removed!', {
         variant: 'success',
         autoHideDuration: 2000
       })
@@ -143,67 +147,71 @@ export default function AddWork (props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
-      <DialogTitle>
-        What have you done?
-      </DialogTitle>
-      <DialogContent>
-        <Select
-          value={locationId}
-          onChange={(e) => { setLocation(Number(e.target.value)) }}
-          error={locationId === 0}
-          fullWidth
-        >
-          <MenuItem value={0}>Please select a location</MenuItem>
-          {locations.map((i) => (
-            <MenuItem value={i.locationId} key={i.locationId}>{i.place} - {i.name}</MenuItem>
-          ))}
-        </Select>
+    <div>
+      <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
+        <DialogTitle>
+          What have you done?
+        </DialogTitle>
+        <DialogContent>
+          <Select
+            value={locationId}
+            onChange={(e) => { setLocation(Number(e.target.value)) }}
+            error={locationId === 0}
+            fullWidth
+          >
+            <MenuItem value={0}>Please select a location</MenuItem>
+            {locations.map((i) => (
+              <MenuItem value={i.locationId} key={i.locationId}>{i.place} - {i.name}</MenuItem>
+            ))}
+          </Select>
 
-        <TextField
-          value={time}
-          onChange={e => setTime(e.target.value)}
-          label='Time'
-          type='text'
-          fullWidth
-          className={classes.spacing}
-          error={(function () {
-            // Test if the string is correct
-            return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
-          })()}
-        />
+          <TextField
+            value={time}
+            onChange={e => setTime(e.target.value)}
+            label='Time'
+            type='number'
+            fullWidth
+            className={classes.spacing}
+            error={(function () {
+              // Test if the string is correct
+              return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
+            })()}
+          />
 
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            value={date}
-            onChange={(e) => { setDate(e as Date) }}
-            label='Date'
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+              value={date}
+              onChange={(e) => { setDate(e as Date) }}
+              label='Date'
+              fullWidth
+              className={classes.spacing}
+            />
+          </MuiPickersUtilsProvider>
+
+          <TextField
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            label='Description'
             fullWidth
             className={classes.spacing}
           />
-        </MuiPickersUtilsProvider>
-
-        <TextField
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          label='Description'
-          fullWidth
-          className={classes.spacing}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Typography component='div' hidden={props.workId === undefined || props.workId === 0}>
-          <Button color='secondary' onClick={onRemove}>
-            Remove
+        </DialogContent>
+        <DialogActions>
+          <Typography component='div' hidden={props.workId === undefined || props.workId === 0}>
+            <Button color='secondary' onClick={() => { setOpen(true) }}>
+              Remove
+            </Button>
+          </Typography>
+          <Button color='primary' onClick={onSave}>
+            Save
           </Button>
-        </Typography>
-        <Button color='primary' onClick={onSave}>
-          Save
-        </Button>
-        <Button color='primary' onClick={props.onClose}>
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <Button color='primary' onClick={props.onClose}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <RemoveDialog open={open} onClose={() => { setOpen(false) }} onRemove={onRemove} />
+    </div>
   )
 }

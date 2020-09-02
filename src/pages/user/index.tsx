@@ -9,6 +9,7 @@ import { FixedSizeList } from 'react-window'
 import { User } from '../../@types/interfaces'
 import $ from 'jquery'
 import './style.scss'
+import ListSkeleton from '../../components/ListSkeleton'
 
 export default function UserPage () {
   const classes = useStyles()
@@ -51,12 +52,13 @@ export default function UserPage () {
 
       <List className='list'>
         <TextField
-          label='search'
+          label='Search'
           fullWidth
           className={classes.search}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        {(users.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList

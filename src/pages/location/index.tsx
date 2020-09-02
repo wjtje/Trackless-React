@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Container, Typography, Fab, ListItem, ListItemText, List, TextField } from '@material-ui/core'
+import { Container, Typography, Fab, ListItem, ListItemText, List, TextField, Zoom } from '@material-ui/core'
 import useStyles from './useStyles'
 import { Add as AddIcon } from '@material-ui/icons'
 import { Location } from '../../@types/interfaces'
@@ -11,6 +11,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import './style.scss'
 import LocationDialog from '../../components/locationDialog'
 import $ from 'jquery'
+import ListSkeleton from '../../components/ListSkeleton'
 
 export default function TodayPage () {
   const classes = useStyles()
@@ -63,7 +64,8 @@ export default function TodayPage () {
       <Typography variant='h5'>Locations</Typography>
 
       <List className='list'>
-        <TextField label='search' fullWidth className={classes.search} value={search} onChange={e => setSearch(e.target.value)} />
+        <TextField label='Search' fullWidth className={classes.search} value={search} onChange={e => setSearch(e.target.value)} />
+        {(locations.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList
@@ -91,18 +93,20 @@ export default function TodayPage () {
         </AutoSizer>
       </List>
 
-      <Fab
-        color='primary'
-        aria-label='add'
-        className={classes.fab}
-        onClick={() => {
-          // Disable editing and show the dialog
-          setLocationId(0)
-          setOpen(true)
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Disable editing and show the dialog
+            setLocationId(0)
+            setOpen(true)
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
 
       <LocationDialog open={open} onClose={onClose} onSave={onSave} locationId={locationId} />
     </Container>

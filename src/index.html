@@ -19,11 +19,52 @@
 
       * {
         font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        box-sizing: content-box;
+      }
+
+      /* Fullwidth input date */
+      .MuiFormControl-root {
+        width: 100%;
+        margin-top: 16px !important;
+      }
+
+      /* Get correct container sizing */
+      .container {
+        height: calc(100vh - 88px);
+        overflow-y: auto;
+      }
+      @media (min-width:0px) and (orientation: landscape) {
+        .container {
+          height: calc(100vh - 80px);
+        }
+      }
+      @media (min-width:600px) {
+        .container {
+          height: calc(100vh - 96px);
+        }
       }
     </style>
+
+    <link rel="manifest" href="./manifest.webmanifest"/>
+    <link rel="shortcut icon" href="./assets/icons/chrome-favicon-16-16.png" />
+    <link rel="apple-touch-icon" href="./assets/icons/android-launchericon-192-192.png" />
   </head>
   <body>
     <div id="root"></div>
     <script src="./app.tsx"></script>
+    <script>
+      // Register a service worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/worker.js').then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope)
+          }, function (err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err)
+          });
+        });
+      }
+    </script>
   </body>
 </html>
