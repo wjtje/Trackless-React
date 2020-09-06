@@ -3,40 +3,30 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Typography, List, TextField, ListItem, ListItemText } from '@material-ui/core'
 import useStyles from './useStyles'
-import { serverUrl, authHeader } from '../../global'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { User } from '../../@types/interfaces'
-import $ from 'jquery'
 import './style.scss'
 import ListSkeleton from '../../components/ListSkeleton'
+import language from '../../language'
+import useUser from '../../hooks/useUsers'
+
+const l = language.userPage
+const lg = language.global
 
 export default function UserPage () {
   const classes = useStyles()
+  const { users } = useUser()
 
   // Get the info
-  const [update] = useState(new Date().toISOString())
-  const [data, setData] = useState([] as User[])
-  useEffect(() => {
-    $.ajax({
-      url: `${serverUrl}/user`,
-      headers: {
-        ...authHeader,
-        update: update
-      }
-    }).done((e) => {
-      setData(e)
-    })
-  }, [update])
-
   const [search, setSearch] = useState('')
-  const [users, setUsers] = useState([] as User[])
+  const [list, setList] = useState([] as User[])
 
   // Update when search changes
   useEffect(() => {
     const s = search.toLowerCase()
 
-    setUsers(data.filter(user => {
+    setList(users.filter(user => {
       // Search array
       return (
         user.firstname.toLowerCase().indexOf(s) !== -1 ||
@@ -44,32 +34,32 @@ export default function UserPage () {
         user.username.toLowerCase().indexOf(s) !== -1
       )
     }))
-  }, [search, data])
+  }, [search, users])
 
   return (
     <Container className={classes.main}>
-      <Typography variant='h5'>Users</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
 
       <List className='list'>
         <TextField
-          label='Search'
+          label={lg.search}
           fullWidth
           className={classes.search}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        {(users.length === 0) ? <ListSkeleton times={3} /> : null}
+        {(list.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList
               height={height}
               width={width}
               itemSize={56}
-              itemCount={users.length}
+              itemCount={list.length}
             >
               {({ index, style }) => (
                 <ListItem
-                  key={users[index].userId}
+                  key={list[index].userId}
                   style={style}
                   button
                   onClick={() => {
@@ -77,8 +67,8 @@ export default function UserPage () {
                   }}
                 >
                   <ListItemText
-                    primary={`${users[index].firstname} ${users[index].lastname}`}
-                    secondary={users[index].username}
+                    primary={`${list[index].firstname} ${list[index].lastname}`}
+                    secondary={list[index].username}
                   />
                 </ListItem>
               )}

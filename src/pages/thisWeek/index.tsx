@@ -7,20 +7,19 @@ import ListWork from '../../components/listWork'
 import moment from 'moment'
 import WorkDialog from '../../components/workDialog'
 import { Add as AddIcon } from '@material-ui/icons'
+import language from '../../language'
+
+const l = language.thisWeekPage
 
 export default function ThisWeekPage () {
   const classes = useStyles()
 
   // States for adding work
   const [workDialog, setWorkDialog] = useState(false)
-  const [updateListWork, setUpdateListWork] = useState(new Date().toISOString())
   const addWorkClose = () => {
     // Disable editing and hide the dialog
     setEditWorkId(0)
     setWorkDialog(false)
-  }
-  const addWorkSave = () => {
-    setUpdateListWork(new Date().toISOString())
   }
 
   // States and handlers for editing work
@@ -33,9 +32,9 @@ export default function ThisWeekPage () {
 
   return (
     <Container className={classes.main}>
-      <Typography variant='h5'>What have you done this week?</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
 
-      <ListWork startDate={moment().day(0).format('YYYY-MM-DD')} endDate={moment().day(7).format('YYYY-MM-DD')} update={updateListWork} onEdit={onEdit} />
+      <ListWork startDate={moment().day(0).format('YYYY-MM-DD')} endDate={moment().day(7).format('YYYY-MM-DD')} onEdit={onEdit} />
 
       <Zoom in>
         <Fab
@@ -52,7 +51,7 @@ export default function ThisWeekPage () {
         </Fab>
       </Zoom>
 
-      <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} workId={editWorkId} />
+      <WorkDialog open={workDialog} onClose={addWorkClose} workId={editWorkId} />
     </Container>
   )
 }

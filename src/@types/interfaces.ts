@@ -21,17 +21,18 @@ export interface User {
   groupName: string;
 }
 
-export interface Location {
-  locationId: number;
-  name: string;
-  place: string;
-  id: string;
-}
-
 export interface Group {
   groupId: number;
   groupName: string;
   users: User[];
+}
+
+export interface Location {
+  locationId: number;
+  hidden: 0 | 1;
+  name: string;
+  place: string;
+  id: string;
 }
 
 export interface Work {

@@ -14,6 +14,11 @@ import UserPage from '../../pages/user'
 import ExportPage from '../../pages/export'
 import HistoryPage from '../../pages/history'
 import $ from 'jquery'
+import language from '../../language'
+
+const l = language.root
+
+let lastError = ''
 
 export default function RootElement () {
   const { enqueueSnackbar } = useSnackbar()
@@ -36,10 +41,22 @@ export default function RootElement () {
 
   // Define global error
   $(document).ajaxError((event, xhr) => {
-    enqueueSnackbar(`Connection error (${xhr.responseJSON?.code})`, {
-      variant: 'error',
-      autoHideDuration: 10000
-    })
+    if (lastError !== xhr.responseJSON?.code) {
+      lastError = xhr.responseJSON?.code
+
+      if (xhr.responseJSON?.code === 'trackless.location.removeFailed') {
+        // Location in use
+        enqueueSnackbar(l.canNotRemove, {
+          variant: 'info',
+          autoHideDuration: 5000
+        })
+      } else {
+        enqueueSnackbar(`${l.connectionError} (${xhr.responseJSON?.code})`, {
+          variant: 'error',
+          autoHideDuration: 10000
+        })
+      }
+    }
   })
 
   return (

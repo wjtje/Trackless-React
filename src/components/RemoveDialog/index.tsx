@@ -1,5 +1,9 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import React from 'react'
+import language from '../../language'
+
+const l = language.removeDialog
+const lg = language.global
 
 export default function RemoveDialog (props: {
   open: boolean;
@@ -12,23 +16,23 @@ export default function RemoveDialog (props: {
       onClose={props.onClose}
     >
       <DialogTitle>
-        Remove
+        {l.title}
       </DialogTitle>
       <DialogContent>
-        Are you sure to remove this?
+        {l.content}
       </DialogContent>
       <DialogActions>
         <Button
           color='primary'
           onClick={props.onRemove}
         >
-          Yes
+          {lg.yes}
         </Button>
         <Button
           color='primary'
           onClick={props.onClose}
         >
-          No
+          {lg.no}
         </Button>
       </DialogActions>
     </Dialog>

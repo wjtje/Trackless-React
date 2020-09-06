@@ -12,6 +12,9 @@ import {
 } from '@material-ui/icons'
 import useStyles from './useStyles'
 import Drawer from '../drawer'
+import language from '../../language'
+
+const lg = language.global
 
 export default function AppBar () {
   const classes = useStyles()
@@ -33,7 +36,7 @@ export default function AppBar () {
           <MenuIcon />
         </IconButton>
         <Typography variant='h6' className={classes.title}>
-          Trackless
+          {lg.appName}
         </Typography>
       </Toolbar>
       <Drawer open={drawerState} onClose={onDrawerClose} />

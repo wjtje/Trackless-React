@@ -5,12 +5,13 @@ import { Container, Avatar, Typography, TextField, Button } from '@material-ui/c
 import useStyles from './useStyles'
 import { Lock } from '@material-ui/icons'
 import { serverUrl } from '../../global'
-import { useSnackbar } from 'notistack'
 import $ from 'jquery'
+import language from '../../language'
+
+const l = language.loginPage
 
 export default function TodayPage () {
   const classes = useStyles()
-  const { enqueueSnackbar } = useSnackbar()
 
   const singIn = () => {
     // Get the data
@@ -32,12 +33,6 @@ export default function TodayPage () {
       // Save api key
       localStorage.setItem('apiKey', result.bearer)
       location.reload()
-    }).fail((result) => {
-      // Trow error
-      const error = JSON.parse(result.responseText)
-      enqueueSnackbar(error.message, {
-        variant: 'error'
-      })
     })
   }
 
@@ -54,7 +49,7 @@ export default function TodayPage () {
         component='h1'
         variant='h5'
       >
-        Sign in
+        {l.title}
       </Typography>
       <form className={classes.form} noValidate>
         <TextField
@@ -63,7 +58,7 @@ export default function TodayPage () {
           required
           fullWidth
           id='username'
-          label='Username'
+          label={l.username}
           name='username'
           autoFocus
         />
@@ -73,7 +68,7 @@ export default function TodayPage () {
           required
           fullWidth
           name='password'
-          label='Password'
+          label={l.password}
           type='password'
           id='password'
         />
@@ -83,7 +78,7 @@ export default function TodayPage () {
           required
           fullWidth
           name='devicename'
-          label='Device name'
+          label={l.deviceName}
           id='devicename'
         />
         <Button
@@ -93,7 +88,7 @@ export default function TodayPage () {
           className={classes.submit}
           onClick={singIn}
         >
-          Sign In
+          {l.btn}
         </Button>
       </form>
     </Container>

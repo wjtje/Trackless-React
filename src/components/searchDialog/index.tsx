@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react'
 import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button } from '@material-ui/core'
-import useStyles from './useStyles'
-import DateFnsUtils from '@date-io/date-fns'
-import {
-  DatePicker,
-  MuiPickersUtilsProvider
-} from '@material-ui/pickers'
+import { DatePicker } from '@material-ui/pickers'
 import moment from 'moment'
+import language from '../../language'
+
+const l = language.searchDialog
+const lg = language.global
 
 export default function SearchDialog (props: {
   open: boolean;
@@ -17,7 +16,6 @@ export default function SearchDialog (props: {
 }) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
-  const classes = useStyles()
 
   // States for the inputs
   const [startDate, setStartDate] = useState(new Date(moment().day(-7).format('YYYY-MM-DD')))
@@ -32,34 +30,30 @@ export default function SearchDialog (props: {
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
       <DialogTitle>
-        What do you want to see?
+        {l.title}
       </DialogTitle>
       <DialogContent>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            value={startDate}
-            onChange={(e) => { setStartDate(e as Date) }}
-            label='Start date'
-            fullWidth
-            className={classes.spacing}
-          />
-        </MuiPickersUtilsProvider>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            value={endDate}
-            onChange={(e) => { setEndDate(e as Date) }}
-            label='End date'
-            fullWidth
-            className={classes.spacing}
-          />
-        </MuiPickersUtilsProvider>
+        <DatePicker
+          value={startDate}
+          onChange={(e) => { setStartDate(e as Date) }}
+          label={l.startDate}
+          fullWidth
+          margin='dense'
+        />
+        <DatePicker
+          value={endDate}
+          onChange={(e) => { setEndDate(e as Date) }}
+          label={l.endDate}
+          fullWidth
+          margin='dense'
+        />
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={onSave}>
-          Search
+          {l.search}
         </Button>
         <Button color='primary' onClick={props.onClose}>
-          Close
+          {lg.btnClose}
         </Button>
       </DialogActions>
     </Dialog>

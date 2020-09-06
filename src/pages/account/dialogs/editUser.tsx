@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, TextField } from '@material-ui/core'
-import useStyles from './useStyles'
 import { authHeader, serverUrl } from '../../../global'
 import $ from 'jquery'
 import { useSnackbar } from 'notistack'
+import language from '../../../language'
+
+const l = language.editUserDialog
+const lg = language.global
 
 export default function EditUser (props: {
   open: boolean;
@@ -18,7 +21,6 @@ export default function EditUser (props: {
 }) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
-  const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
 
   // States for the inputs
@@ -46,7 +48,7 @@ export default function EditUser (props: {
       }
     }).done(() => {
       // Show a toast
-      enqueueSnackbar('Saved!', {
+      enqueueSnackbar(lg.saved, {
         variant: 'success',
         autoHideDuration: 2000
       })
@@ -59,32 +61,33 @@ export default function EditUser (props: {
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
       <DialogTitle>
-        Change password
+        {l.title}
       </DialogTitle>
       <DialogContent>
         <TextField
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
-          label='Firstname'
+          label={l.firstname}
           type='text'
+          margin='dense'
           fullWidth
         />
 
         <TextField
           value={lastName}
           onChange={e => setLastName(e.target.value)}
-          label='Lastname'
+          label={l.lastname}
           type='text'
+          margin='dense'
           fullWidth
-          className={classes.spacing}
         />
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={onSave}>
-          Save
+          {lg.btnSave}
         </Button>
         <Button color='primary' onClick={props.onClose}>
-          Close
+          {lg.btnClose}
         </Button>
       </DialogActions>
     </Dialog>

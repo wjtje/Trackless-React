@@ -6,6 +6,9 @@ import useStyles from './useStyles'
 import { version, serverUrl } from '../../global'
 import useFetch from 'use-http'
 import { Skeleton } from '@material-ui/lab'
+import language from '../../language'
+
+const l = language.settingsPage
 
 export default function SettingsPage () {
   const classes = useStyles()
@@ -14,14 +17,14 @@ export default function SettingsPage () {
 
   return (
     <Container className={classes.main + ' container'}>
-      <Typography variant='h5'>Settings</Typography>
-      <Typography variant='subtitle1'>About</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
+      <Typography variant='subtitle1'>{l.about}</Typography>
       <List>
         <ListItem>
-          <ListItemText primary='Client version' secondary={version} />
+          <ListItemText primary={l.clientVersion} secondary={version} />
         </ListItem>
         <ListItem>
-          <ListItemText primary='Server version' secondary={(loading) ? <Skeleton /> : data?.version} />
+          <ListItemText primary={l.serverVersion} secondary={(loading) ? <Skeleton /> : data?.version} />
         </ListItem>
       </List>
     </Container>

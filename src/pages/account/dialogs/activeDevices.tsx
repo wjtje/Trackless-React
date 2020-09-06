@@ -1,12 +1,16 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, ListItemText, List, ListItem } from '@material-ui/core'
+import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, ListItemText, List, ListItem, DialogContentText } from '@material-ui/core'
 import { Api } from '../../../@types/interfaces'
 import { serverUrl, authHeader } from '../../../global'
 import moment from 'moment'
 import $ from 'jquery'
 import { useSnackbar } from 'notistack'
+import language from '../../../language'
+
+const l = language.activeDevicesDialog
+const lg = language.global
 
 export default function ActiveDevices (props: {
   open: boolean;
@@ -39,9 +43,12 @@ export default function ActiveDevices (props: {
     <div>
       <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
         <DialogTitle>
-          Active devices
+          {l.title}
         </DialogTitle>
         <DialogContent>
+          <DialogContentText>
+            {l.content}
+          </DialogContentText>
           <List>
             {data.map((i) => (
               <ListItem
@@ -55,7 +62,7 @@ export default function ActiveDevices (props: {
               >
                 <ListItemText
                   primary={i.deviceName}
-                  secondary={`last used: ${moment(i.lastUsed).format('YYYY-MM-DD HH:mm')}`}
+                  secondary={`${l.lastUsed} ${moment(i.lastUsed).format('llll')}`}
                 />
               </ListItem>
             ))}
@@ -63,7 +70,7 @@ export default function ActiveDevices (props: {
         </DialogContent>
         <DialogActions>
           <Button color='primary' onClick={props.onClose}>
-            Close
+            {lg.btnClose}
           </Button>
         </DialogActions>
       </Dialog>
@@ -76,10 +83,10 @@ export default function ActiveDevices (props: {
         }}
       >
         <DialogTitle>
-          Remove
+          {l.askRemoveTitle}
         </DialogTitle>
         <DialogContent>
-          Are you sure to remove access to &apos;{name}&apos;
+          {l.askRemoveContent(name)}
         </DialogContent>
         <DialogActions>
           <Button
@@ -96,7 +103,7 @@ export default function ActiveDevices (props: {
                 }
               }).done(() => {
                 // Show a toast
-                enqueueSnackbar('Saved!', {
+                enqueueSnackbar(lg.removed, {
                   variant: 'success',
                   autoHideDuration: 2000
                 })
@@ -105,7 +112,7 @@ export default function ActiveDevices (props: {
               })
             }}
           >
-            Yes
+            {lg.yes}
           </Button>
           <Button
             color='primary'
@@ -114,7 +121,7 @@ export default function ActiveDevices (props: {
               setOpen(false)
             }}
           >
-            No
+            {lg.no}
           </Button>
         </DialogActions>
       </Dialog>

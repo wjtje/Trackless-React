@@ -5,55 +5,43 @@ import { Container, List, ListItem, ListItemText, Typography, Fab, Zoom } from '
 import useStyles from './useStyles'
 import ListWork from '../../components/listWork'
 import moment from 'moment'
-import { serverUrl, authHeader } from '../../global'
-import useFetch from 'use-http'
-import { loadingLocation } from './interfaces'
 import { loadingSuggestions } from './skeleton'
 import WorkDialog from '../../components/workDialog'
 import { Add as AddIcon } from '@material-ui/icons'
+import language from '../../language'
+import useLocation from '../../hooks/useLocation'
+import { Work } from '../../@types/interfaces'
+
+const l = language.todayPage
 
 export default function TodayPage () {
   const classes = useStyles()
-
-  // Get the most used
-  const { data = loadingSuggestions }: { data: loadingLocation[]|undefined } = useFetch(
-    `${serverUrl}/location/user/~/most`,
-    {
-      headers: {
-        ...authHeader
-      }
-    },
-    []
-  )
+  const { mostUsed } = useLocation()
 
   // States for adding work
   const [workDialog, setWorkDialog] = useState(false)
-  const [updateListWork, setUpdateListWork] = useState(new Date().toISOString())
   const [mostUsedLocationId, setMostUsedLocationId] = useState(0)
   const addWorkClose = () => {
     // Disable editing and hide the dialog
-    setEditWorkId(0)
+    setEditWork(null)
     setWorkDialog(false)
-  }
-  const addWorkSave = () => {
-    setUpdateListWork(new Date().toISOString())
   }
 
   // States and handlers for editing work
-  const [editWorkId, setEditWorkId] = useState(0)
-  const onEdit = (workId: number) => {
+  const [editWork, setEditWork] = useState(null as Work | null)
+  const onEdit = (work: Work) => {
     // Enable editing and show the dialog
-    setEditWorkId(workId)
+    setEditWork(work)
     setWorkDialog(true)
   }
 
   return (
     <Container className={classes.main + ' container'}>
-      <Typography variant='h5'>What have you done today?</Typography>
-      <Typography variant='subtitle1'>Suggestions</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
+      <Typography variant='subtitle1'>{l.suggestions}</Typography>
 
       <List>
-        {data?.map((i) => (
+        {((mostUsed.length === 0) ? loadingSuggestions : mostUsed).map((i) => (
           <ListItem
             button
             key={i.locationId}
@@ -68,7 +56,11 @@ export default function TodayPage () {
         ))}
       </List>
 
-      <ListWork startDate={moment().format('YYYY-MM-DD')} endDate={moment().format('YYYY-MM-DD')} update={updateListWork} onEdit={onEdit} />
+      <ListWork
+        startDate={moment().format('YYYY-MM-DD')}
+        endDate={moment().format('YYYY-MM-DD')}
+        onEdit={onEdit}
+      />
 
       <Zoom in>
         <Fab
@@ -77,7 +69,7 @@ export default function TodayPage () {
           className={classes.fab}
           onClick={() => {
             // Disable editing and show workDialog
-            setEditWorkId(0)
+            setEditWork(null)
             setWorkDialog(true)
           }}
         >
@@ -85,7 +77,12 @@ export default function TodayPage () {
         </Fab>
       </Zoom>
 
-      <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} locationId={mostUsedLocationId} workId={editWorkId} />
+      <WorkDialog
+        open={workDialog}
+        onClose={addWorkClose}
+        locationId={mostUsedLocationId}
+        editWork={editWork}
+      />
     </Container>
   )
 }

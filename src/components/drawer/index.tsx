@@ -19,6 +19,10 @@ import {
 import { serverUrl, authHeader } from '../../global'
 import { Access } from '../../@types/interfaces'
 import $ from 'jquery'
+import language from '../../language'
+
+const l = language.drawer
+const lg = language.global
 
 export default function Drawer (props: {
   open: boolean;
@@ -59,8 +63,8 @@ export default function Drawer (props: {
 
   return (
     <MaterialDrawer anchor='left' open={props.open} onClose={props.onClose}>
-      <Typography variant='h6' className={classes.title}>Trackless</Typography>
-      <Typography variant='body2' className={classes.subtitle}>Client beta</Typography>
+      <Typography variant='h6' className={classes.title}>{lg.appName}</Typography>
+      <Typography variant='body2' className={classes.subtitle}>{l.subTitle}</Typography>
       <Divider />
       <List className={classes.list}>
 
@@ -77,7 +81,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><HomeIcon /></ListItemIcon>
-            <ListItemText primary='Home' />
+            <ListItemText primary={l.home} />
           </ListItem>
         </Link>
 
@@ -94,7 +98,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><DateRangeIcon /></ListItemIcon>
-            <ListItemText primary='This week' />
+            <ListItemText primary={l.thisWeek} />
           </ListItem>
         </Link>
 
@@ -111,7 +115,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><HistoryIcon /></ListItemIcon>
-            <ListItemText primary='History' />
+            <ListItemText primary={l.history} />
           </ListItem>
         </Link>
 
@@ -126,7 +130,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><ImportExportIcon /></ListItemIcon>
-            <ListItemText primary='Export' />
+            <ListItemText primary={l.export} />
           </ListItem>
         </Link>
 
@@ -143,7 +147,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><AccountBoxIcon /></ListItemIcon>
-            <ListItemText primary='Account' />
+            <ListItemText primary={l.account} />
           </ListItem>
         </Link>
 
@@ -160,7 +164,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><LocationOnIcon /></ListItemIcon>
-            <ListItemText primary='Location' />
+            <ListItemText primary={l.location} />
           </ListItem>
         </Link>
 
@@ -178,7 +182,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><PeopleIcon /></ListItemIcon>
-            <ListItemText primary='Users' />
+            <ListItemText primary={l.users} />
           </ListItem>
         </Link>
 
@@ -189,7 +193,7 @@ export default function Drawer (props: {
         >
           <ListItem button>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
-            <ListItemText primary='Settings' />
+            <ListItemText primary={l.settings} />
           </ListItem>
         </Link>
 

@@ -14,33 +14,25 @@ import { jsPDF as JSPDF } from 'jspdf'
 import { GetApp as DownloadIcon } from '@material-ui/icons'
 import moment from 'moment'
 import ListSkeleton from '../../components/ListSkeleton'
+import language from '../../language'
+import useUser from '../../hooks/useUsers'
+
+const l = language.exportPage
+const lg = language.global
 
 export default function ExportPage () {
   const classes = useStyles()
+  const { users } = useUser()
 
   // Get the info
-  const [update] = useState(new Date().toISOString())
-  const [data, setData] = useState([] as User[])
-  useEffect(() => {
-    $.ajax({
-      url: `${serverUrl}/user`,
-      headers: {
-        ...authHeader,
-        update: update
-      }
-    }).done((e) => {
-      setData(e)
-    })
-  }, [update])
-
   const [search, setSearch] = useState('')
-  const [users, setUsers] = useState([] as User[])
+  const [list, setList] = useState([] as User[])
 
   // Update when search changes
   useEffect(() => {
     const s = search.toLowerCase()
 
-    setUsers(data.filter(user => {
+    setList(users.filter(user => {
       // Search array
       return (
         user.firstname.toLowerCase().indexOf(s) !== -1 ||
@@ -48,7 +40,7 @@ export default function ExportPage () {
         user.username.toLowerCase().indexOf(s) !== -1
       )
     }))
-  }, [search, data])
+  }, [search, users])
 
   // Functions and states for exporting
   const [open, setOpen] = useState(false)
@@ -90,43 +82,43 @@ export default function ExportPage () {
 
   return (
     <Container className={classes.main}>
-      <Typography variant='h5'>Export to pdf</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
 
       <List className='list'>
         <TextField
-          label='Search'
+          label={lg.search}
           fullWidth
           className={classes.search}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        {(users.length === 0) ? <ListSkeleton times={3} /> : null}
+        {(list.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList
               height={height}
               width={width}
               itemSize={56}
-              itemCount={users.length}
+              itemCount={list.length}
             >
               {({ index, style }) => (
                 <ListItem
-                  key={users[index].userId}
+                  key={list[index].userId}
                   style={style}
                   button
                   onClick={() => {
                     // Download that user
-                    setDownloadId(users[index].userId)
+                    setDownloadId(list[index].userId)
                     setUserInfo({
-                      firstname: users[index].firstname,
-                      lastname: users[index].lastname
+                      firstname: list[index].firstname,
+                      lastname: list[index].lastname
                     })
                     setOpen(true)
                   }}
                 >
                   <ListItemText
-                    primary={`${users[index].firstname} ${users[index].lastname}`}
-                    secondary={users[index].username}
+                    primary={`${list[index].firstname} ${list[index].lastname}`}
+                    secondary={list[index].username}
                   />
                 </ListItem>
               )}
@@ -182,13 +174,13 @@ export default function ExportPage () {
       })
 
       doc.setFontSize(20)
-      doc.text('Trackless', 10, 15)
+      doc.text(lg.appName, 10, 15)
 
       doc.setFontSize(12)
       doc.text([
-        `Date of export: ${moment().format('YYYY-MM-DD')}`,
-        `User: ${e[0]?.user.firstname || userInfo.firstname} ${e[0]?.user.lastname || userInfo.lastname}`,
-        `Week number: ${moment(startDate).week()}`
+        `${l.exportDate}: ${moment().format('LLLL')}`,
+        `${l.exportUser}: ${e[0]?.user.firstname || userInfo.firstname} ${e[0]?.user.lastname || userInfo.lastname}`,
+        `${l.exportWeek}: ${moment(startDate).week()}`
       ], 10, 22)
 
       doc.line(10, 35, 201, 35)
@@ -197,28 +189,28 @@ export default function ExportPage () {
         {
           id: 'date',
           name: 'date',
-          prompt: 'Date',
+          prompt: l.date,
           width: 32,
           padding: 0
         },
         {
           id: 'location',
           name: 'location',
-          prompt: 'Location',
+          prompt: l.location,
           width: 101,
           padding: 0
         },
         {
           id: 'description',
           name: 'description',
-          prompt: 'description',
+          prompt: l.comment,
           width: 101,
           padding: 0
         },
         {
           id: 'time',
           name: 'time',
-          prompt: 'Time',
+          prompt: l.duration,
           width: 20,
           padding: 0
         }

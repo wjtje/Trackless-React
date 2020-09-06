@@ -15,5 +15,8 @@ export default makeStyles((theme) => ({
   search: {
     marginBottom: theme.spacing(2),
     width: `calc(100% - ${theme.spacing(4)})`
+  },
+  itemDisabled: {
+    color: 'red'
   }
 }))

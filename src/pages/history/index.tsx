@@ -8,6 +8,9 @@ import moment from 'moment'
 import WorkDialog from '../../components/workDialog'
 import { Search as SearchIcon } from '@material-ui/icons'
 import SearchDialog from '../../components/searchDialog'
+import language from '../../language'
+
+const l = language.historyPage
 
 export default function HistoryPage () {
   const classes = useStyles()
@@ -18,14 +21,10 @@ export default function HistoryPage () {
 
   // States for adding work
   const [workDialog, setWorkDialog] = useState(false)
-  const [updateListWork, setUpdateListWork] = useState(new Date().toISOString())
   const addWorkClose = () => {
     // Disable editing and hide the dialog
     setEditWorkId(0)
     setWorkDialog(false)
-  }
-  const addWorkSave = () => {
-    setUpdateListWork(new Date().toISOString())
   }
 
   // States and handlers for editing work
@@ -41,9 +40,9 @@ export default function HistoryPage () {
 
   return (
     <Container className={classes.main + ' container'}>
-      <Typography variant='h5'>What have you done in the past?</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
 
-      <ListWork startDate={startDate} endDate={endDate} update={updateListWork} onEdit={onEdit} />
+      <ListWork startDate={startDate} endDate={endDate} onEdit={onEdit} />
 
       <Zoom in>
         <Fab
@@ -58,14 +57,13 @@ export default function HistoryPage () {
         </Fab>
       </Zoom>
 
-      <WorkDialog open={workDialog} onClose={addWorkClose} onSave={addWorkSave} update={updateListWork} workId={editWorkId} />
+      <WorkDialog open={workDialog} onClose={addWorkClose} workId={editWorkId} />
       <SearchDialog
         open={openSearch}
         onClose={() => {
           setOpenSearch(false)
         }}
         onChange={(newStartDate, newEndDate) => {
-          setUpdateListWork(new Date().toISOString())
           setStartDate(newStartDate)
           setEndDate(newEndDate)
         }}

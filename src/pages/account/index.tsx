@@ -17,6 +17,9 @@ import ChangePassword from './dialogs/changePassword'
 import EditUser from './dialogs/editUser'
 import DownloadDetails from './dialogs/downloadInfo'
 import ActiveDevices from './dialogs/activeDevices'
+import language from '../../language'
+
+const l = language.accountPage
 
 export default function AccountPage () {
   const classes = useStyles()
@@ -43,31 +46,31 @@ export default function AccountPage () {
 
   return (
     <Container className={classes.main + ' container'}>
-      <Typography variant='h5'>{(data[0] === undefined) ? <Skeleton /> : `Welcome ${data[0].firstname} ${data[0].lastname}`}</Typography>
+      <Typography variant='h5'>{(data[0] === undefined) ? <Skeleton /> : `${l.welcome} ${data[0].firstname} ${data[0].lastname}`}</Typography>
 
-      <Typography variant='h6' className={classes.spacing}>Your details</Typography>
+      <Typography variant='h6' className={classes.spacing}>{l.yourDetails}</Typography>
       <table>
         <tbody>
           <tr>
-            <Typography variant='body2' component='td' className={classes.tdFirst}>Firstname</Typography>
+            <Typography variant='body2' component='td' className={classes.tdFirst}>{l.firstname}</Typography>
             <td className={classes.tdLast}>
               {(data[0] === undefined) ? <Skeleton variant='text' /> : data[0].firstname}
             </td>
           </tr>
           <tr>
-            <Typography variant='body2' component='td' className={classes.tdFirst}>Lastname</Typography>
+            <Typography variant='body2' component='td' className={classes.tdFirst}>{l.lastname}</Typography>
             <td className={classes.tdLast}>
               {(data[0] === undefined) ? <Skeleton variant='text' /> : data[0].lastname}
             </td>
           </tr>
           <tr>
-            <Typography variant='body2' component='td' className={classes.tdFirst}>Username</Typography>
+            <Typography variant='body2' component='td' className={classes.tdFirst}>{l.username}</Typography>
             <td className={classes.tdLast}>
               {(data[0] === undefined) ? <Skeleton variant='text' /> : data[0].username}
             </td>
           </tr>
           <tr>
-            <Typography variant='body2' component='td' className={classes.tdFirst}>Group</Typography>
+            <Typography variant='body2' component='td' className={classes.tdFirst}>{l.group}</Typography>
             <td className={classes.tdLast}>
               {(data[0] === undefined) ? <Skeleton variant='text' /> : data[0].groupName}
             </td>
@@ -75,23 +78,23 @@ export default function AccountPage () {
         </tbody>
       </table>
 
-      <Typography variant='h6' className={classes.spacing}>Options for your account</Typography>
+      <Typography variant='h6' className={classes.spacing}>{l.options}</Typography>
       <List>
         <ListItem button onClick={() => { setOpenPassword(true) }}>
           <ListItemIcon><PasswordIcon /></ListItemIcon>
-          <ListItemText primary='Change my password' />
+          <ListItemText primary={l.changePassword} />
         </ListItem>
         <ListItem button onClick={() => { setOpenActiveDevices(true) }}>
           <ListItemIcon><DevicesIcon /></ListItemIcon>
-          <ListItemText primary='Devices you&#39;re logged into' />
+          <ListItemText primary={l.activeDevices} />
         </ListItem>
         <ListItem button onClick={() => { setOpenDownload(true) }}>
           <ListItemIcon><DownloadIcon /></ListItemIcon>
-          <ListItemText primary='Download my details' />
+          <ListItemText primary={l.downloadDetails} />
         </ListItem>
         <ListItem button onClick={() => { setOpenEdit(true) }}>
           <ListItemIcon><EditIcon /></ListItemIcon>
-          <ListItemText primary='Edit your info' />
+          <ListItemText primary={l.editUser} />
         </ListItem>
       </List>
 

@@ -1,15 +1,15 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState } from 'react'
-import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button } from '@material-ui/core'
+import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, DialogContentText } from '@material-ui/core'
 import useStyles from './useStyles'
-import DateFnsUtils from '@date-io/date-fns'
-import {
-  DatePicker,
-  MuiPickersUtilsProvider
-} from '@material-ui/pickers'
+import { DatePicker } from '@material-ui/pickers'
 import moment from 'moment'
 import { useSnackbar } from 'notistack'
+import language from '../../language'
+
+const l = language.exportDialog
+const lg = language.global
 
 export default function ExportDialog (props: {
   open: boolean;
@@ -31,7 +31,7 @@ export default function ExportDialog (props: {
     props.onExport(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'))
 
     // Show a toast
-    enqueueSnackbar('Started downloading', {
+    enqueueSnackbar(l.startedDownloading, {
       variant: 'success',
       autoHideDuration: 2000
     })
@@ -40,34 +40,33 @@ export default function ExportDialog (props: {
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
       <DialogTitle>
-        Export to pdf
+        {l.title}
       </DialogTitle>
       <DialogContent>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            value={startDate}
-            onChange={(e) => { setStartDate(e as Date) }}
-            label='Start date'
-            fullWidth
-            className={classes.spacing}
-          />
-        </MuiPickersUtilsProvider>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DatePicker
-            value={endDate}
-            onChange={(e) => { setEndDate(e as Date) }}
-            label='End date'
-            fullWidth
-            className={classes.spacing}
-          />
-        </MuiPickersUtilsProvider>
+        <DialogContentText>
+          {l.content}
+        </DialogContentText>
+        <DatePicker
+          value={startDate}
+          onChange={(e) => { setStartDate(e as Date) }}
+          label={l.startDate}
+          fullWidth
+          className={classes.spacing}
+        />
+        <DatePicker
+          value={endDate}
+          onChange={(e) => { setEndDate(e as Date) }}
+          label={l.endDate}
+          fullWidth
+          className={classes.spacing}
+        />
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={onSave}>
-          Download
+          {l.download}
         </Button>
         <Button color='primary' onClick={props.onClose}>
-          Close
+          {lg.btnClose}
         </Button>
       </DialogActions>
     </Dialog>

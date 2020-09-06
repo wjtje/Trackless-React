@@ -16,6 +16,6 @@ export default makeStyles((theme) => ({
   },
   link: {
     textDecoration: 'none',
-    color: 'black'
+    color: theme.palette.text.primary
   }
 }))

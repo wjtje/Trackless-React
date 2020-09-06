@@ -2,7 +2,10 @@
 
 import React from 'react'
 import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button } from '@material-ui/core'
-import { systemEmail } from '../../../global'
+import language from '../../../language'
+
+const l = language.downloadDetailsDialog
+const lg = language.global
 
 export default function DownloadDetails (props: {
   open: boolean;
@@ -14,15 +17,14 @@ export default function DownloadDetails (props: {
   return (
     <Dialog open={props.open} onClose={props.onClose} fullScreen={fullScreen}>
       <DialogTitle>
-        Download details
+        {l.title}
       </DialogTitle>
       <DialogContent>
-        If you want to download all the info we have about you.<br />
-        Please send your system administrator an email at {systemEmail} with your full name and tell them that you want to see your details.
+        {l.content}
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={props.onClose}>
-          Close
+          {lg.btnClose}
         </Button>
       </DialogActions>
     </Dialog>

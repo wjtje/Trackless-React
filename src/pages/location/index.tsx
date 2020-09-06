@@ -12,16 +12,32 @@ import './style.scss'
 import LocationDialog from '../../components/locationDialog'
 import $ from 'jquery'
 import ListSkeleton from '../../components/ListSkeleton'
+import language from '../../language'
+
+const l = language.locationPage
+const lg = language.global
 
 export default function TodayPage () {
   const classes = useStyles()
 
-  // Get the user info
+  // States
   const [update, setUpdate] = useState(new Date().toISOString())
   const [data, setData] = useState([] as Array<Location>)
+  const [search, setSearch] = useState('')
+  const [locations, setLocation] = useState([] as Location[])
+  const [open, setOpen] = useState(false)
+  const [editLocation, setEditLocation] = useState({
+    locationId: 0,
+    hidden: 0,
+    name: '',
+    place: '',
+    id: ''
+  } as Location)
+
+  // Get the data from the server
   useEffect(() => {
     $.ajax({
-      url: `${serverUrl}/location`,
+      url: `${serverUrl}/location?hidden`,
       headers: {
         ...authHeader,
         update: update
@@ -31,10 +47,7 @@ export default function TodayPage () {
     })
   }, [update])
 
-  const [search, setSearch] = useState('')
-  const [locations, setLocation] = useState([] as Location[])
-
-  // Update locations when data or search changes
+  // Sort the data if the data changes or the search changes
   useEffect(() => {
     const s = search.toLowerCase()
 
@@ -48,23 +61,18 @@ export default function TodayPage () {
     }))
   }, [search, data])
 
-  // States and function for the dialog
-  const [open, setOpen] = useState(false)
-  const [locationId, setLocationId] = useState(0)
-  const onClose = () => {
-    setOpen(false)
-  }
-  const onSave = () => {
-    // Update the locations
-    setUpdate(new Date().toISOString())
-  }
-
   return (
     <Container className={classes.main}>
-      <Typography variant='h5'>Locations</Typography>
+      <Typography variant='h5'>{l.title}</Typography>
 
       <List className='list'>
-        <TextField label='Search' fullWidth className={classes.search} value={search} onChange={e => setSearch(e.target.value)} />
+        <TextField
+          label={lg.search}
+          fullWidth
+          className={classes.search}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
         {(locations.length === 0) ? <ListSkeleton times={3} /> : null}
         <AutoSizer>
           {({ height, width }) => (
@@ -80,12 +88,16 @@ export default function TodayPage () {
                   style={style}
                   button
                   onClick={() => {
-                    // Set the correct id
-                    setLocationId(locations[index].locationId)
+                    // Set the edit locations and show the dialog
+                    setEditLocation(locations[index])
                     setOpen(true)
                   }}
                 >
-                  <ListItemText primary={`${locations[index].place} - ${locations[index].name}`} secondary={locations[index].id} />
+                  <ListItemText
+                    className={(locations[index].hidden) ? classes.itemDisabled : ''}
+                    primary={`${locations[index].place} - ${locations[index].name}`}
+                    secondary={locations[index].id}
+                  />
                 </ListItem>
               )}
             </FixedSizeList>
@@ -100,7 +112,13 @@ export default function TodayPage () {
           className={classes.fab}
           onClick={() => {
             // Disable editing and show the dialog
-            setLocationId(0)
+            setEditLocation({
+              locationId: 0,
+              hidden: 0,
+              name: '',
+              place: '',
+              id: ''
+            })
             setOpen(true)
           }}
         >
@@ -108,7 +126,15 @@ export default function TodayPage () {
         </Fab>
       </Zoom>
 
-      <LocationDialog open={open} onClose={onClose} onSave={onSave} locationId={locationId} />
+      <LocationDialog
+        open={open}
+        onClose={() => { setOpen(false) }}
+        onSave={() => {
+          // Force reload the page
+          setUpdate(new Date().toISOString())
+        }}
+        editLocation={editLocation}
+      />
     </Container>
   )
 }
