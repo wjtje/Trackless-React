@@ -76,7 +76,8 @@ export default function Drawer (props: {
             access.indexOf('trackless.location.read') === -1 ||
             access.indexOf('trackless.work.readOwn') === -1 ||
             access.indexOf('trackless.work.removeOwn') === -1 ||
-            access.indexOf('trackless.work.editOwn') === -1
+            access.indexOf('trackless.work.editOwn') === -1 ||
+            access.indexOf('trackless.worktype.read') === -1
           )}
         >
           <ListItem button>
@@ -93,7 +94,8 @@ export default function Drawer (props: {
             access.indexOf('trackless.location.read') === -1 ||
             access.indexOf('trackless.work.readOwn') === -1 ||
             access.indexOf('trackless.work.removeOwn') === -1 ||
-            access.indexOf('trackless.work.editOwn') === -1
+            access.indexOf('trackless.work.editOwn') === -1 ||
+            access.indexOf('trackless.worktype.read') === -1
           )}
         >
           <ListItem button>
@@ -110,7 +112,8 @@ export default function Drawer (props: {
             access.indexOf('trackless.location.read') === -1 ||
             access.indexOf('trackless.work.readOwn') === -1 ||
             access.indexOf('trackless.work.removeOwn') === -1 ||
-            access.indexOf('trackless.work.editOwn') === -1
+            access.indexOf('trackless.work.editOwn') === -1 ||
+            access.indexOf('trackless.worktype.read') === -1
           )}
         >
           <ListItem button>

@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, Select, MenuItem, TextField, Typography, DialogContentText } from '@material-ui/core'
+import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, Select, MenuItem, TextField, Typography, DialogContentText, CircularProgress } from '@material-ui/core'
 import useLocation from '../../hooks/useLocation'
 import { DatePicker } from '@material-ui/pickers'
 import useStyles from './useStyles'
@@ -13,6 +13,7 @@ import { useSnackbar } from 'notistack'
 import RemoveDialog from '../RemoveDialog'
 import language from '../../language'
 import useWork from '../../hooks/useWork'
+import useWorktypes from '../../hooks/useWorktypes'
 
 const l = language.workDialog
 const lg = language.global
@@ -31,12 +32,16 @@ export default function WorkDialog (props: {
 
   // Get all the locations
   const { locations, lastUsed } = useLocation()
+  const { worktypes } = useWorktypes()
 
   // States for the inputs
   const [locationId, setLocation] = useState(0)
-  const [time, setTime] = useState('0')
+  const [time, setTime] = useState('')
   const [date, setDate] = useState(new Date())
   const [description, setDescription] = useState('')
+  const [worktypeId, setWorktype] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [loadingDel, setLoadingDel] = useState(false)
 
   // Update lastUsed location
   useEffect(() => {
@@ -50,6 +55,13 @@ export default function WorkDialog (props: {
     }
   }, [props.locationId])
 
+  // Check if worktypeId 1 is valid
+  useEffect(() => {
+    if (worktypes[0] != null) {
+      setWorktype(worktypes[0].worktypeId)
+    }
+  }, [worktypes])
+
   // Get work for editing
   useEffect(() => {
     if (props.editWork != null) {
@@ -58,12 +70,13 @@ export default function WorkDialog (props: {
       setTime(String(props.editWork.time))
       setDate(new Date(props.editWork.date))
       setDescription(props.editWork.description)
+      setWorktype(props.editWork.worktype.worktypeId)
     }
   }, [props.editWork])
 
   // Event handlers
   const onSave = () => {
-    props.onClose()
+    setLoading(true)
 
     // Push data to the server
     $.ajax({
@@ -76,9 +89,13 @@ export default function WorkDialog (props: {
         locationId: locationId,
         time: Number(time.replace(',', '.')), // Make time a number
         date: moment(date).format('YYYY-MM-DD'),
-        description: description
+        description: description,
+        worktypeId: worktypeId
       }
     }).done(() => {
+      props.onClose()
+      setLoading(false)
+
       // Show a toast
       enqueueSnackbar(lg.saved, {
         variant: 'success',
@@ -91,6 +108,8 @@ export default function WorkDialog (props: {
 
       // Reload the work data
       update()
+    }).fail(() => {
+      setLoading(false)
     })
   }
 
@@ -98,8 +117,6 @@ export default function WorkDialog (props: {
   const [open, setOpen] = useState(false)
   const onRemove = () => {
     setOpen(false)
-
-    props.onClose()
 
     // Push data to the server
     $.ajax({
@@ -109,6 +126,9 @@ export default function WorkDialog (props: {
         ...authHeader
       }
     }).done(() => {
+      props.onClose()
+      setLoadingDel(false)
+
       // Show a toast
       enqueueSnackbar(lg.removed, {
         variant: 'success',
@@ -121,6 +141,8 @@ export default function WorkDialog (props: {
 
       // Realod the work data
       update()
+    }).fail(() => {
+      setLoadingDel(false)
     })
   }
 
@@ -149,19 +171,6 @@ export default function WorkDialog (props: {
             ))}
           </Select>
 
-          <TextField
-            value={time}
-            onChange={e => setTime(e.target.value)}
-            label={l.duration}
-            type='number'
-            fullWidth
-            className={classes.spacing}
-            error={(function () {
-              // Test if the string is correct
-              return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
-            })()}
-          />
-
           <DatePicker
             value={date}
             onChange={(e) => { setDate(e as Date) }}
@@ -177,23 +186,58 @@ export default function WorkDialog (props: {
             fullWidth
             className={classes.spacing}
           />
+
+          <TextField
+            value={time}
+            onChange={e => setTime(e.target.value)}
+            label={l.duration}
+            type='number'
+            fullWidth
+            className={classes.spacing}
+            error={(function () {
+              // Test if the string is correct
+              return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
+            })()}
+          />
+
+          <Select
+            value={worktypeId}
+            onChange={(e) => { setWorktype(Number(e.target.value)) }}
+            error={worktypeId === 0}
+            fullWidth
+            style={{
+              marginTop: 16
+            }}
+            MenuProps={{
+              transitionDuration: 0
+            }}
+          >
+            <MenuItem value={0}>{l.selectWorktype}</MenuItem>
+            {worktypes.map((i) => (
+              <MenuItem value={i.worktypeId} key={i.worktypeId}>{i.name}</MenuItem>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
-          <Typography component='div' hidden={props.editWork == null}>
-            <Button color='secondary' onClick={() => { setOpen(true) }}>
+          <Typography component='div' hidden={props.editWork == null} className={classes.wrapper}>
+            <Button color='secondary' onClick={() => { setOpen(true); setLoadingDel(true) }} disabled={loadingDel}>
               {lg.btnRemove}
             </Button>
+            {loadingDel && <CircularProgress size={24} className={classes.buttonProgress} />}
           </Typography>
-          <Button color='primary' onClick={onSave}>
-            {lg.btnSave}
-          </Button>
+          <div className={classes.wrapper}>
+            <Button color='primary' onClick={onSave} disabled={loading}>
+              {lg.btnSave}
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </div>
           <Button color='primary' onClick={props.onClose}>
             {lg.btnClose}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <RemoveDialog open={open} onClose={() => { setOpen(false) }} onRemove={onRemove} />
+      <RemoveDialog open={open} onClose={() => { setOpen(false); setLoadingDel(false) }} onRemove={onRemove} />
     </div>
   )
 }

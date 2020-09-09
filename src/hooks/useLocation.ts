@@ -32,7 +32,9 @@ const useLocation = () => {
       })
         .then(response => response.json())
         .then(data => {
-          setLocation(data)
+          if (typeof data.forEach === 'function') {
+            setLocation(data)
+          }
           setLocationFetch(false)
         })
 
@@ -44,7 +46,9 @@ const useLocation = () => {
       })
         .then(response => response.json())
         .then(data => {
-          setLastUsed(data)
+          if (typeof data.forEach === 'function') {
+            setLastUsed(data)
+          }
         })
 
       // Get most used
@@ -55,7 +59,9 @@ const useLocation = () => {
       })
         .then(response => response.json())
         .then(data => {
-          setMostUsed(data)
+          if (typeof data.forEach === 'function') {
+            setMostUsed(data)
+          }
         })
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

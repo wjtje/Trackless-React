@@ -26,7 +26,7 @@ export default function RootElement () {
   // Go to the login page
   if (
     window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login' &&
-    window.localStorage.getItem('apiKey') === null
+    (window.localStorage.getItem('apiKey') == null || window.localStorage.getItem('apiKey') === '')
   ) {
     window.location.href = '/login'
   }
@@ -34,7 +34,7 @@ export default function RootElement () {
   // Go to the homepage
   if (
     window.location.href.split('/')[window.location.href.split('/').length - 1] === 'login' &&
-    window.localStorage.getItem('apiKey') !== null
+    window.localStorage.getItem('apiKey') != null && window.localStorage.getItem('apiKey') !== ''
   ) {
     window.location.href = '/'
   }
@@ -50,11 +50,18 @@ export default function RootElement () {
           variant: 'info',
           autoHideDuration: 5000
         })
+      } else if (xhr.responseJSON?.code === 'trackless.auth.user.notFound' && window.localStorage.getItem('apiKey') !== '') {
+        // Wrong api key
+        window.localStorage.setItem('apiKey', '')
+        window.location.href = '/login'
       } else {
-        enqueueSnackbar(`${l.connectionError} (${xhr.responseJSON?.code})`, {
-          variant: 'error',
-          autoHideDuration: 10000
-        })
+        // Do not print error's on login screen
+        if (window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login') {
+          enqueueSnackbar(`${l.connectionError} (${xhr.responseJSON?.code || l.errorUndef})`, {
+            variant: 'error',
+            autoHideDuration: 10000
+          })
+        }
       }
     }
   })

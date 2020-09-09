@@ -36,17 +36,32 @@ export default function ListWork (props: {
           </tr>
           {/* Display the table header */}
           <tr className={classes.thead}>
-            <td className={classes.tdFirst}>
+            <td
+              className={classes.tdFirst}
+              style={{
+                minWidth: 200
+              }}
+            >
               <Typography variant='subtitle1' className={classes.bold}>
                 {l.location}
               </Typography>
             </td>
-            <td className={classes.td}>
+            <td
+              className={classes.td}
+              style={{
+                minWidth: 60
+              }}
+            >
               <Typography variant='subtitle1' className={classes.bold}>
                 {l.duration}
               </Typography>
             </td>
-            <td className={classes.td}>
+            <td
+              className={classes.td}
+              style={{
+                minWidth: 250
+              }}
+            >
               <Typography variant='subtitle1' className={classes.bold}>
                 {l.comment}
               </Typography>
@@ -85,17 +100,32 @@ export default function ListWork (props: {
         </tr>
         {/* Display the table header */}
         <tr className={classes.thead}>
-          <td className={classes.tdFirst}>
+          <td
+            className={classes.tdFirst}
+            style={{
+              minWidth: 200
+            }}
+          >
             <Typography variant='subtitle1' className={classes.bold}>
               {l.location}
             </Typography>
           </td>
-          <td className={classes.td}>
+          <td
+            className={classes.td}
+            style={{
+              minWidth: 60
+            }}
+          >
             <Typography variant='subtitle1' className={classes.bold}>
               {l.duration}
             </Typography>
           </td>
-          <td className={classes.td}>
+          <td
+            className={classes.td}
+            style={{
+              minWidth: 250
+            }}
+          >
             <Typography variant='subtitle1' className={classes.bold}>
               {l.comment}
             </Typography>

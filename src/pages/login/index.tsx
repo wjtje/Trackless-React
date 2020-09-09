@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
-import React from 'react'
-import { Container, Avatar, Typography, TextField, Button } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Container, Avatar, Typography, TextField, Button, CircularProgress } from '@material-ui/core'
 import useStyles from './useStyles'
 import { Lock } from '@material-ui/icons'
 import { serverUrl } from '../../global'
@@ -13,11 +13,15 @@ const l = language.loginPage
 export default function TodayPage () {
   const classes = useStyles()
 
+  const [loading, setLoading] = useState(false)
+
   const singIn = () => {
     // Get the data
     const username = ($('#username')[0] as HTMLInputElement).value
     const password = ($('#password')[0] as HTMLInputElement).value
     const deviceName = ($('#devicename')[0] as HTMLInputElement).value
+
+    setLoading(true)
 
     // Send it to the server
     $.ajax({
@@ -33,6 +37,8 @@ export default function TodayPage () {
       // Save api key
       localStorage.setItem('apiKey', result.bearer)
       location.reload()
+    }).fail(() => {
+      setLoading(false)
     })
   }
 
@@ -81,15 +87,18 @@ export default function TodayPage () {
           label={l.deviceName}
           id='devicename'
         />
-        <Button
-          fullWidth
-          variant='contained'
-          color='primary'
-          className={classes.submit}
-          onClick={singIn}
-        >
-          {l.btn}
-        </Button>
+        <div>
+          <Button
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            onClick={singIn}
+          >
+            {l.btn}
+          </Button>
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+        </div>
       </form>
     </Container>
   )

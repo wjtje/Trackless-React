@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const CACHE_NAME = 'trackless-0.3-beta.0'
+const CACHE_NAME = 'trackless-0.3-beta.1'
 const filesToCache = []
 
 // Perform install steps
