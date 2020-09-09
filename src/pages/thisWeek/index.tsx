@@ -8,6 +8,7 @@ import moment from 'moment'
 import WorkDialog from '../../components/workDialog'
 import { Add as AddIcon } from '@material-ui/icons'
 import language from '../../language'
+import { Work } from '../../@types/interfaces'
 
 const l = language.thisWeekPage
 
@@ -18,15 +19,15 @@ export default function ThisWeekPage () {
   const [workDialog, setWorkDialog] = useState(false)
   const addWorkClose = () => {
     // Disable editing and hide the dialog
-    setEditWorkId(0)
+    setEditWork(null)
     setWorkDialog(false)
   }
 
   // States and handlers for editing work
-  const [editWorkId, setEditWorkId] = useState(0)
-  const onEdit = (workId: number) => {
+  const [editWork, setEditWork] = useState(null as Work | null)
+  const onEdit = (work: Work) => {
     // Enable editing and show the dialog
-    setEditWorkId(workId)
+    setEditWork(work)
     setWorkDialog(true)
   }
 
@@ -43,7 +44,7 @@ export default function ThisWeekPage () {
           className={classes.fab}
           onClick={() => {
             // Disable editing and show workDialog
-            setEditWorkId(0)
+            setEditWork(null)
             setWorkDialog(true)
           }}
         >
@@ -51,7 +52,7 @@ export default function ThisWeekPage () {
         </Fab>
       </Zoom>
 
-      <WorkDialog open={workDialog} onClose={addWorkClose} workId={editWorkId} />
+      <WorkDialog open={workDialog} onClose={addWorkClose} editWork={editWork} />
     </Container>
   )
 }

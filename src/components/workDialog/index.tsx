@@ -34,7 +34,7 @@ export default function WorkDialog (props: {
 
   // States for the inputs
   const [locationId, setLocation] = useState(0)
-  const [time, setTime] = useState('0')
+  const [time, setTime] = useState('')
   const [date, setDate] = useState(new Date())
   const [description, setDescription] = useState('')
 
@@ -149,19 +149,6 @@ export default function WorkDialog (props: {
             ))}
           </Select>
 
-          <TextField
-            value={time}
-            onChange={e => setTime(e.target.value)}
-            label={l.duration}
-            type='number'
-            fullWidth
-            className={classes.spacing}
-            error={(function () {
-              // Test if the string is correct
-              return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
-            })()}
-          />
-
           <DatePicker
             value={date}
             onChange={(e) => { setDate(e as Date) }}
@@ -176,6 +163,19 @@ export default function WorkDialog (props: {
             label={l.comment}
             fullWidth
             className={classes.spacing}
+          />
+
+          <TextField
+            value={time}
+            onChange={e => setTime(e.target.value)}
+            label={l.duration}
+            type='number'
+            fullWidth
+            className={classes.spacing}
+            error={(function () {
+              // Test if the string is correct
+              return !/(^[0-9]{1}|^1[0-9]{1})($|[.,][0-9]{1,2}$)/.test(time)
+            })()}
           />
         </DialogContent>
         <DialogActions>
