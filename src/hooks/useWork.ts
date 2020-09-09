@@ -36,7 +36,9 @@ const useWork = (startDate?: string, endDate?: string) => {
       })
         .then(response => response.json())
         .then(data => {
-          setWork(data)
+          if (typeof data.forEach === 'function') {
+            setWork(data)
+          }
           setWorkFetch(false)
           console.timeEnd('Getting work from server')
         })

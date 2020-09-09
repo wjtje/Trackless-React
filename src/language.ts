@@ -79,7 +79,8 @@ export default {
     date: 'Datum',
     location: 'Project',
     comment: 'Beschrijving',
-    duration: 'Duur'
+    duration: 'Duur',
+    worktype: 'Werk type'
   },
 
   historyPage: {
@@ -148,7 +149,8 @@ export default {
 
   root: {
     canNotRemove: 'Kan het niet verwijderen',
-    connectionError: 'Probleem met de server'
+    connectionError: 'Probleem met de server',
+    errorUndef: 'Bent u wel verbonden met het internet?'
   },
 
   searchDialog: {
@@ -163,6 +165,7 @@ export default {
     titleEdit: 'Werkzaamheden aanpassen',
     content: 'Vul hieronder de gegevens in van wat je hebt gedaan',
     selectLocation: 'Selecteer een locatie',
+    selectWorktype: 'Selecteer een werktype',
     duration: 'Duur',
     date: 'Datum',
     comment: 'Beschrijving'

@@ -1,12 +1,12 @@
 {
   "name": "trackless-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "parcel serve src/index.html -p 55567",
     "build": "parcel build -d build --no-source-maps --public-url . src/index.html",
-    "test": "standardx **/*.ts **/*.tsx"
+    "test": "standardx **/*.ts **/*.tsx && tsc"
   },
   "repository": {
     "type": "git",

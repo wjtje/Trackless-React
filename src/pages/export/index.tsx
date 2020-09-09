@@ -158,13 +158,15 @@ export default function ExportPage () {
         time: string
         description: string
         location: string
+        worktype: string
       }[] = []
       e.forEach((i: Work) => {
         result.push({
           date: i.date,
           time: String(i.time),
           description: i.description,
-          location: `${i.location.place} - ${i.location.name}`
+          location: `${i.location.place} - ${i.location.name}`,
+          worktype: i.worktype.name
         })
       })
 
@@ -197,14 +199,21 @@ export default function ExportPage () {
           id: 'location',
           name: 'location',
           prompt: l.location,
-          width: 101,
+          width: 81,
           padding: 0
         },
         {
           id: 'description',
           name: 'description',
           prompt: l.comment,
-          width: 101,
+          width: 81,
+          padding: 0
+        },
+        {
+          id: 'worktype',
+          name: 'worktype',
+          prompt: l.worktype,
+          width: 40,
           padding: 0
         },
         {
