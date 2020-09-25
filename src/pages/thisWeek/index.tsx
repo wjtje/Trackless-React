@@ -17,6 +17,7 @@ export default function ThisWeekPage () {
 
   // States for adding work
   const [workDialog, setWorkDialog] = useState(false)
+  const [editWork, setEditWork] = useState(null as Work | null)
   const addWorkClose = () => {
     // Disable editing and hide the dialog
     setEditWork(null)
@@ -24,7 +25,6 @@ export default function ThisWeekPage () {
   }
 
   // States and handlers for editing work
-  const [editWork, setEditWork] = useState(null as Work | null)
   const onEdit = (work: Work) => {
     // Enable editing and show the dialog
     setEditWork(work)

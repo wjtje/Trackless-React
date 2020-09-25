@@ -30,6 +30,13 @@ export default function LocationDialog (props: {
   // Other states
   const [open, setOpen] = useState(false)
 
+  // Clear all the states
+  function clearStates () {
+    setPlace('')
+    setName('')
+    setId('')
+  }
+
   // Get work for editing
   useEffect(() => {
     // Clear the inputs
@@ -188,11 +195,4 @@ export default function LocationDialog (props: {
       <RemoveDialog open={open} onClose={() => { setOpen(false) }} onRemove={onRemove} />
     </div>
   )
-
-  // Clear all the states
-  function clearStates () {
-    setPlace('')
-    setName('')
-    setId('')
-  }
 }

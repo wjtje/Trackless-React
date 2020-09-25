@@ -49,106 +49,6 @@ export default function ExportPage () {
     firstname: 'Jhon',
     lastname: 'Doe'
   })
-  const onClose = () => {
-    setOpen(false)
-  }
-  const onExport = (startDate: string, endDate: string) => {
-    if (downloadId !== 0) {
-      $.ajax({
-        url: `${serverUrl}/work/user/${downloadId}/date/${startDate}/${endDate}`,
-        headers: {
-          ...authHeader
-        }
-      }).done(exportToPdf(startDate))
-    } else {
-      // Get all users
-      $.ajax({
-        url: `${serverUrl}/user`,
-        headers: {
-          ...authHeader
-        }
-      }).done((users: User[]) => {
-        users.forEach((user) => {
-          $.ajax({
-            url: `${serverUrl}/work/user/${user.userID}/date/${startDate}/${endDate}`,
-            headers: {
-              ...authHeader
-            }
-          }).done(exportToPdf(startDate))
-        })
-      })
-    }
-  }
-
-  return (
-    <Container className={classes.main}>
-      <Typography variant='h5'>{l.title}</Typography>
-
-      <List className='list'>
-        <TextField
-          label={lg.search}
-          fullWidth
-          className={classes.search}
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        {(list.length === 0) ? <ListSkeleton times={3} /> : null}
-        <AutoSizer>
-          {({ height, width }) => (
-            <FixedSizeList
-              height={height}
-              width={width}
-              itemSize={56}
-              itemCount={list.length}
-            >
-              {({ index, style }) => (
-                <ListItem
-                  key={list[index].userID}
-                  style={style}
-                  button
-                  onClick={() => {
-                    // Download that user
-                    setDownloadId(list[index].userID)
-                    setUserInfo({
-                      firstname: list[index].firstname,
-                      lastname: list[index].lastname
-                    })
-                    setOpen(true)
-                  }}
-                >
-                  <ListItemText
-                    primary={`${list[index].firstname} ${list[index].lastname}`}
-                    secondary={list[index].username}
-                  />
-                </ListItem>
-              )}
-            </FixedSizeList>
-          )}
-        </AutoSizer>
-      </List>
-
-      <Zoom in>
-        <Fab
-          color='primary'
-          aria-label='add'
-          className={classes.fab}
-          onClick={() => {
-            // Download all users
-            setDownloadId(0)
-            setUserInfo({
-              firstname: 'Jhon',
-              lastname: 'Doe'
-            })
-            setOpen(true)
-          }}
-        >
-          <DownloadIcon />
-        </Fab>
-      </Zoom>
-
-      <ExportDialog open={open} onClose={onClose} onExport={onExport} />
-    </Container>
-  )
 
   function exportToPdf (startDate: string): JQuery.TypeOrArray<JQuery.Deferred.CallbackBase<any, JQuery.Ajax.SuccessTextStatus, JQuery.jqXHR<any>, never>> {
     return (e: Work[]) => {
@@ -268,4 +168,104 @@ export default function ExportPage () {
       }
     }
   }
+  const onClose = () => {
+    setOpen(false)
+  }
+  const onExport = (startDate: string, endDate: string) => {
+    if (downloadId !== 0) {
+      $.ajax({
+        url: `${serverUrl}/work/user/${downloadId}/date/${startDate}/${endDate}`,
+        headers: {
+          ...authHeader
+        }
+      }).done(exportToPdf(startDate))
+    } else {
+      // Get all users
+      $.ajax({
+        url: `${serverUrl}/user`,
+        headers: {
+          ...authHeader
+        }
+      }).done((users: User[]) => {
+        users.forEach((user) => {
+          $.ajax({
+            url: `${serverUrl}/work/user/${user.userID}/date/${startDate}/${endDate}`,
+            headers: {
+              ...authHeader
+            }
+          }).done(exportToPdf(startDate))
+        })
+      })
+    }
+  }
+
+  return (
+    <Container className={classes.main}>
+      <Typography variant='h5'>{l.title}</Typography>
+
+      <List className='list'>
+        <TextField
+          label={lg.search}
+          fullWidth
+          className={classes.search}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        {(list.length === 0) ? <ListSkeleton times={3} /> : null}
+        <AutoSizer>
+          {({ height, width }) => (
+            <FixedSizeList
+              height={height}
+              width={width}
+              itemSize={56}
+              itemCount={list.length}
+            >
+              {({ index, style }) => (
+                <ListItem
+                  key={list[index].userID}
+                  style={style}
+                  button
+                  onClick={() => {
+                    // Download that user
+                    setDownloadId(list[index].userID)
+                    setUserInfo({
+                      firstname: list[index].firstname,
+                      lastname: list[index].lastname
+                    })
+                    setOpen(true)
+                  }}
+                >
+                  <ListItemText
+                    primary={`${list[index].firstname} ${list[index].lastname}`}
+                    secondary={list[index].username}
+                  />
+                </ListItem>
+              )}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
+      </List>
+
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Download all users
+            setDownloadId(0)
+            setUserInfo({
+              firstname: 'Jhon',
+              lastname: 'Doe'
+            })
+            setOpen(true)
+          }}
+        >
+          <DownloadIcon />
+        </Fab>
+      </Zoom>
+
+      <ExportDialog open={open} onClose={onClose} onExport={onExport} />
+    </Container>
+  )
 }
