@@ -70,7 +70,7 @@ export default function ExportPage () {
       }).done((users: User[]) => {
         users.forEach((user) => {
           $.ajax({
-            url: `${serverUrl}/work/user/${user.userId}/date/${startDate}/${endDate}`,
+            url: `${serverUrl}/work/user/${user.userID}/date/${startDate}/${endDate}`,
             headers: {
               ...authHeader
             }
@@ -103,12 +103,12 @@ export default function ExportPage () {
             >
               {({ index, style }) => (
                 <ListItem
-                  key={list[index].userId}
+                  key={list[index].userID}
                   style={style}
                   button
                   onClick={() => {
                     // Download that user
-                    setDownloadId(list[index].userId)
+                    setDownloadId(list[index].userID)
                     setUserInfo({
                       firstname: list[index].firstname,
                       lastname: list[index].lastname
@@ -152,6 +152,12 @@ export default function ExportPage () {
 
   function exportToPdf (startDate: string): JQuery.TypeOrArray<JQuery.Deferred.CallbackBase<any, JQuery.Ajax.SuccessTextStatus, JQuery.jqXHR<any>, never>> {
     return (e: Work[]) => {
+      let total = 0
+
+      const count: {
+        [value: string]: number
+      } = {}
+
       // Sort the data
       const result: {
         date: string
@@ -161,6 +167,15 @@ export default function ExportPage () {
         worktype: string
       }[] = []
       e.forEach((i: Work) => {
+        // Add to the count
+        total += i.time
+
+        if (count[`${i.location.place} - ${i.location.name}`] == null) {
+          count[`${i.location.place} - ${i.location.name}`] = i.time
+        } else {
+          count[`${i.location.place} - ${i.location.name}`] += i.time
+        }
+
         result.push({
           date: i.date,
           time: String(i.time),
@@ -168,6 +183,26 @@ export default function ExportPage () {
           location: `${i.location.place} - ${i.location.name}`,
           worktype: i.worktype.name
         })
+      })
+
+      // Add the count
+      Object.keys(count).forEach((i) => {
+        result.push({
+          date: '',
+          time: String(count[i]),
+          description: '',
+          location: i,
+          worktype: ''
+        })
+      })
+
+      // Add the total
+      result.push({
+        date: '',
+        time: String(total),
+        description: '',
+        location: l.total,
+        worktype: ''
       })
 
       // Create a pdf

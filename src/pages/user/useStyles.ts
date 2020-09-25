@@ -10,5 +10,10 @@ export default makeStyles((theme) => ({
   search: {
     marginBottom: theme.spacing(2),
     width: `calc(100% - ${theme.spacing(4)})`
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
   }
 }))

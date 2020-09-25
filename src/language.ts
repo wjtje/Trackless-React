@@ -80,7 +80,8 @@ export default {
     location: 'Project',
     comment: 'Beschrijving',
     duration: 'Duur',
-    worktype: 'Werk type'
+    worktype: 'Werk type',
+    total: 'Totaal'
   },
 
   historyPage: {
@@ -168,6 +169,17 @@ export default {
     selectWorktype: 'Selecteer een werktype',
     duration: 'Duur',
     date: 'Datum',
-    comment: 'Beschrijving'
+    comment: 'Beschrijving',
+    errInput: 'De gegevens die u heeft ingevult is niet correct'
+  },
+
+  addUserDialog: {
+    title: 'Nieuwe medewerker toevoegen',
+    content: 'Geef hieronder de gegevens van de nieuwe medewerker op. Die persoon kan inloggen met zijn gebruikersnaam en wachtwoord.',
+    firstname: 'Voornaam',
+    lastname: 'Achternaam',
+    username: 'Gebruikersnaam',
+    selectGroup: 'Selecteer een group',
+    errInput: 'De gegevens die u heeft ingevult is niet correct'
   }
 }

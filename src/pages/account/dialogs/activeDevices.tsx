@@ -52,10 +52,10 @@ export default function ActiveDevices (props: {
           <List>
             {data.map((i) => (
               <ListItem
-                key={i.apiId}
+                key={i.apiID}
                 button
                 onClick={() => {
-                  setId(i.apiId)
+                  setId(i.apiID)
                   setName(i.deviceName)
                   setOpen(true)
                 }}

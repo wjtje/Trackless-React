@@ -36,7 +36,7 @@ export default function LocationDialog (props: {
     clearStates()
 
     // Update the states
-    if (props.editLocation?.locationId != null && props.editLocation?.locationId !== 0) {
+    if (props.editLocation?.locationID != null && props.editLocation?.locationID !== 0) {
       setPlace(props.editLocation?.place)
       setName(props.editLocation?.name)
       setId(props.editLocation?.id)
@@ -50,8 +50,8 @@ export default function LocationDialog (props: {
     // Push data to the server
     // Check if we need to post or patch
     $.ajax({
-      url: (props.editLocation?.locationId === undefined || props.editLocation?.locationId === 0) ? `${serverUrl}/location` : `${serverUrl}/location/${props.editLocation?.locationId}`,
-      method: (props.editLocation?.locationId === undefined || props.editLocation?.locationId === 0) ? 'post' : 'patch',
+      url: (props.editLocation?.locationID === undefined || props.editLocation?.locationID === 0) ? `${serverUrl}/location` : `${serverUrl}/location/${props.editLocation?.locationID}`,
+      method: (props.editLocation?.locationID === undefined || props.editLocation?.locationID === 0) ? 'post' : 'patch',
       headers: {
         ...authHeader
       },
@@ -82,7 +82,7 @@ export default function LocationDialog (props: {
 
     // Send the command to the server
     $.ajax({
-      url: `${serverUrl}/location/${props.editLocation?.locationId}`,
+      url: `${serverUrl}/location/${props.editLocation?.locationID}`,
       method: 'delete',
       headers: {
         ...authHeader
@@ -105,7 +105,7 @@ export default function LocationDialog (props: {
 
     // Toggle the hidden state
     $.ajax({
-      url: `${serverUrl}/location/${props.editLocation?.locationId}`,
+      url: `${serverUrl}/location/${props.editLocation?.locationID}`,
       method: 'patch',
       headers: {
         ...authHeader
@@ -126,7 +126,7 @@ export default function LocationDialog (props: {
   }
 
   // Check if edit mode is on
-  const editMode = props.editLocation?.locationId != null && props.editLocation?.locationId !== 0
+  const editMode = props.editLocation?.locationID != null && props.editLocation?.locationID !== 0
 
   return (
     <div>

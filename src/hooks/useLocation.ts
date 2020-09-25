@@ -6,7 +6,6 @@ import { createGlobalState } from 'react-hooks-global-state'
 import { useEffect } from 'react'
 
 const { useGlobalState } = createGlobalState({
-  locations: [] as Location[],
   lastUsed: [] as Location[],
   mostUsed: [] as Location[],
   locationFetch: false
@@ -14,7 +13,6 @@ const { useGlobalState } = createGlobalState({
 
 const useLocation = () => {
   // Define the states
-  const [locations, setLocation] = useGlobalState('locations')
   const [lastUsed, setLastUsed] = useGlobalState('lastUsed')
   const [mostUsed, setMostUsed] = useGlobalState('mostUsed')
   const [locationFetch, setLocationFetch] = useGlobalState('locationFetch')
@@ -23,20 +21,6 @@ const useLocation = () => {
   useEffect(() => {
     if (!locationFetch) { // Check if we are already fetching
       setLocationFetch(true)
-
-      // Get locations
-      fetch(`${serverUrl}/location`, {
-        headers: {
-          ...authHeader
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (typeof data.forEach === 'function') {
-            setLocation(data)
-          }
-          setLocationFetch(false)
-        })
 
       // Get last used
       fetch(`${serverUrl}/location/user/~/last`, {
@@ -68,7 +52,6 @@ const useLocation = () => {
 
   // Return the data
   return {
-    locations: locations,
     lastUsed: lastUsed,
     mostUsed: mostUsed
   }

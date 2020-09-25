@@ -35,7 +35,7 @@ export default function ThisWeekPage () {
     <Container className={classes.main}>
       <Typography variant='h5'>{l.title}</Typography>
 
-      <ListWork startDate={moment().day(0).format('YYYY-MM-DD')} endDate={moment().day(7).format('YYYY-MM-DD')} onEdit={onEdit} />
+      <ListWork startDate={moment().day(0).format('YYYY-MM-DD')} endDate={moment().day(6).format('YYYY-MM-DD')} onEdit={onEdit} />
 
       <Zoom in>
         <Fab
@@ -47,6 +47,7 @@ export default function ThisWeekPage () {
             setEditWork(null)
             setWorkDialog(true)
           }}
+          disabled={!navigator.onLine}
         >
           <AddIcon />
         </Fab>

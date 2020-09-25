@@ -20,7 +20,7 @@ export default function TodayPage () {
 
   // States for adding work
   const [workDialog, setWorkDialog] = useState(false)
-  const [mostUsedLocationId, setMostUsedLocationId] = useState(0)
+  const [mostUsedlocationID, setMostUsedlocationID] = useState(0)
   const addWorkClose = () => {
     // Disable editing and hide the dialog
     setEditWork(null)
@@ -44,10 +44,10 @@ export default function TodayPage () {
         {((mostUsed.length === 0) ? loadingSuggestions : mostUsed).map((i) => (
           <ListItem
             button
-            key={i.locationId}
+            key={i.locationID}
             onClick={() => {
-              // Update the locationId and show the dialog
-              setMostUsedLocationId(i.locationId)
+              // Update the locationID and show the dialog
+              setMostUsedlocationID(i.locationID)
               setWorkDialog(true)
             }}
           >
@@ -72,6 +72,7 @@ export default function TodayPage () {
             setEditWork(null)
             setWorkDialog(true)
           }}
+          disabled={!navigator.onLine}
         >
           <AddIcon />
         </Fab>
@@ -80,7 +81,7 @@ export default function TodayPage () {
       <WorkDialog
         open={workDialog}
         onClose={addWorkClose}
-        locationId={mostUsedLocationId}
+        locationID={mostUsedlocationID}
         editWork={editWork}
       />
     </Container>

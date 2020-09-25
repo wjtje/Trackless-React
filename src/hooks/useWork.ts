@@ -2,14 +2,12 @@
 
 import { Work } from '../@types/interfaces'
 import { useState, useEffect } from 'react'
+import useDatabase from './useDatabase'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
 import { serverUrl, authHeader } from '../global'
-import { createGlobalState } from 'react-hooks-global-state'
 
-const { useGlobalState } = createGlobalState({
-  work: [] as Work[],
-  workUpdate: new Date().toISOString(),
-  workFetch: false
-})
+const moment = extendMoment(Moment as any)
 
 interface ParcedWork {
   [value: string]: Work[];
@@ -17,19 +15,35 @@ interface ParcedWork {
 
 const useWork = (startDate?: string, endDate?: string) => {
   // Define the states
-  const [work, setWork] = useGlobalState('work')
-  const [workUpdate, setWorkUpdate] = useGlobalState('workUpdate')
-  const [workFetch, setWorkFetch] = useGlobalState('workFetch')
+  const [dateWork, setDateWork] = useState([] as Work[])
   const [parcedWork, setParcedWork] = useState({} as ParcedWork)
 
-  // Fetch all the data onMount
+  // Get infomation from the database
+  const { work } = useDatabase()
+
+  // Get work between the start and endDate
   useEffect(() => {
-    if (startDate != null && endDate != null && !workFetch) {
-      setWorkFetch(true)
+    // Check if it is in the cache
+    const r = moment().range(
+      moment().day(0).hour(0).minute(0).second(-1),
+      moment().day(6).hour(0).minute(0).second(1)
+    )
+    if (r.contains(moment(startDate)) && r.contains(moment(endDate))) {
+      // Get it from the local cache
+      const range = moment().range(moment(startDate), moment(endDate))
+      const buffer = [] as Work[]
 
-      console.time('Getting work from server')
+      work.forEach((i) => {
+        // Test if the work is beween the dates
+        if (range.contains(moment(i.date))) {
+          buffer.push(i)
+        }
+      })
 
-      fetch(`${serverUrl}/work/user/~/date/${startDate}/${endDate}`, {
+      setDateWork(buffer)
+    } else {
+      // Get it from the server
+      fetch(`${serverUrl}/user/~/work/?startDate=${startDate}&endDate=${endDate}`, {
         headers: {
           ...authHeader
         }
@@ -37,24 +51,20 @@ const useWork = (startDate?: string, endDate?: string) => {
         .then(response => response.json())
         .then(data => {
           if (typeof data.forEach === 'function') {
-            setWork(data)
+            setDateWork(data)
           }
-          setWorkFetch(false)
-          console.timeEnd('Getting work from server')
         })
     }
-  }, [startDate, endDate, setWork, workUpdate]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, work])
 
   // Parce the work
   useEffect(() => {
-    console.time('Sorting work')
-
     // Sort the data by date
     const tempBuffer: {
       [value: string]: Work[];
     } = {}
 
-    work.forEach((i) => {
+    dateWork.forEach((i) => {
       if (tempBuffer[i.date] === undefined) {
         tempBuffer[i.date] = [i]
       } else {
@@ -63,20 +73,10 @@ const useWork = (startDate?: string, endDate?: string) => {
     })
 
     setParcedWork(tempBuffer)
+  }, [dateWork])
 
-    console.timeEnd('Sorting work')
-  }, [work])
-
-  // Custom functions for adding and updating work
-  const update = () => {
-    setWorkUpdate(new Date().toISOString())
-  }
-
-  // Export the data
   return {
-    work: work,
-    parcedWork: parcedWork,
-    update: update
+    parcedWork: parcedWork
   }
 }
 

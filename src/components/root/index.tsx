@@ -1,6 +1,6 @@
 // Copyright (c) 2020 Wouter van der Wal
 
-import React from 'react'
+import React, { useState } from 'react'
 import AppBar from '../appBar'
 import TodayPage from '../../pages/today'
 import { useSnackbar } from 'notistack'
@@ -15,6 +15,8 @@ import ExportPage from '../../pages/export'
 import HistoryPage from '../../pages/history'
 import $ from 'jquery'
 import language from '../../language'
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions } from '@material-ui/core'
+import { version } from '../../global'
 
 const l = language.root
 
@@ -66,9 +68,27 @@ export default function RootElement () {
     }
   })
 
+  // States for update dialog
+  const [open, setOpen] = useState((window.localStorage.getItem('lastVersion') !== version))
+
   return (
     <div>
       <AppBar />
+      <Dialog open={open} onClose={() => { setOpen(false); window.localStorage.setItem('lastVersion', version) }}>
+        <DialogTitle>Trackless is geupdated!</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Wat is nieuw in versie {version}</DialogContentText>
+          <ul>
+            <li>Het totaal aantal uren van een weekbriefje wordt automatisch berekend</li>
+            <li>De app gebruikt nu minder internet</li>
+          </ul>
+        </DialogContent>
+        <DialogActions>
+          <Button color='primary' onClick={() => { setOpen(false); window.localStorage.setItem('lastVersion', version) }}>
+            Sluiten
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Switch>
         <Route path='/' exact component={() => <TodayPage />} />
         <Route path='/account' exact component={() => <AccountPage />} />

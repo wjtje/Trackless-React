@@ -71,7 +71,7 @@ export default function ListWork (props: {
           {parcedWork[date].map((i) => (
             <tr
               className={classes.tr}
-              key={i.workId}
+              key={i.workID}
               onClick={() => {
                 props.onEdit(i)
               }}

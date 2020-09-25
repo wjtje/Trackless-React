@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Container, Typography, List, TextField, ListItem, ListItemText } from '@material-ui/core'
+import { Container, Typography, List, TextField, ListItem, ListItemText, Zoom, Fab } from '@material-ui/core'
 import useStyles from './useStyles'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
@@ -10,6 +10,8 @@ import './style.scss'
 import ListSkeleton from '../../components/ListSkeleton'
 import language from '../../language'
 import useUser from '../../hooks/useUsers'
+import { Add as AddIcon } from '@material-ui/icons'
+import AddUserDialog from '../../components/addUserDialog'
 
 const l = language.userPage
 const lg = language.global
@@ -17,6 +19,8 @@ const lg = language.global
 export default function UserPage () {
   const classes = useStyles()
   const { users } = useUser()
+
+  const [addDialog, setAddDialog] = useState(false)
 
   // Get the info
   const [search, setSearch] = useState('')
@@ -59,7 +63,7 @@ export default function UserPage () {
             >
               {({ index, style }) => (
                 <ListItem
-                  key={list[index].userId}
+                  key={list[index].userID}
                   style={style}
                   button
                   onClick={() => {
@@ -76,6 +80,23 @@ export default function UserPage () {
           )}
         </AutoSizer>
       </List>
+
+      <Zoom in>
+        <Fab
+          color='primary'
+          aria-label='add'
+          className={classes.fab}
+          onClick={() => {
+            // Disable editing and show workDialog
+            setAddDialog(true)
+          }}
+          disabled={!navigator.onLine}
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
+
+      <AddUserDialog open={addDialog} onClose={() => { setAddDialog(false) }} />
     </Container>
   )
 }

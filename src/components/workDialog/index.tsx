@@ -12,8 +12,8 @@ import { Work } from '../../@types/interfaces'
 import { useSnackbar } from 'notistack'
 import RemoveDialog from '../RemoveDialog'
 import language from '../../language'
-import useWork from '../../hooks/useWork'
-import useWorktypes from '../../hooks/useWorktypes'
+import useDatabase from '../../hooks/useDatabase'
+import _ from 'lodash'
 
 const l = language.workDialog
 const lg = language.global
@@ -21,56 +21,55 @@ const lg = language.global
 export default function WorkDialog (props: {
   open: boolean;
   onClose: () => void;
-  locationId?: number;
+  locationID?: number;
   editWork?: Work | null;
 }) {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
-  const { update } = useWork()
+  const { addWork, removeWork, location, me, worktype } = useDatabase()
 
   // Get all the locations
-  const { locations, lastUsed } = useLocation()
-  const { worktypes } = useWorktypes()
+  const { lastUsed } = useLocation()
 
   // States for the inputs
-  const [locationId, setLocation] = useState(0)
+  const [locationID, setLocation] = useState(0)
   const [time, setTime] = useState('')
   const [date, setDate] = useState(new Date())
   const [description, setDescription] = useState('')
-  const [worktypeId, setWorktype] = useState(0)
+  const [worktypeID, setWorktype] = useState(0)
   const [loading, setLoading] = useState(false)
   const [loadingDel, setLoadingDel] = useState(false)
 
   // Update lastUsed location
   useEffect(() => {
-    setLocation(lastUsed[0]?.locationId)
+    setLocation(lastUsed[0]?.locationID)
   }, [lastUsed])
 
   // Update most used location
   useEffect(() => {
-    if (props.locationId !== 0 && props.locationId !== undefined) {
-      setLocation(props.locationId)
+    if (props.locationID !== 0 && props.locationID !== undefined) {
+      setLocation(props.locationID)
     }
-  }, [props.locationId])
+  }, [props.locationID])
 
-  // Check if worktypeId 1 is valid
+  // Check if worktypeID 1 is valid
   useEffect(() => {
-    if (worktypes[0] != null) {
-      setWorktype(worktypes[0].worktypeId)
+    if (worktype[0] != null) {
+      setWorktype(worktype[0].worktypeID)
     }
-  }, [worktypes])
+  }, [worktype])
 
   // Get work for editing
   useEffect(() => {
     if (props.editWork != null) {
       // Set the states
-      setLocation(props.editWork.location.locationId)
+      setLocation(props.editWork.location.locationID)
       setTime(String(props.editWork.time))
       setDate(new Date(props.editWork.date))
       setDescription(props.editWork.description)
-      setWorktype(props.editWork.worktype.worktypeId)
+      setWorktype(props.editWork.worktype.worktypeID)
     }
   }, [props.editWork])
 
@@ -78,39 +77,67 @@ export default function WorkDialog (props: {
   const onSave = () => {
     setLoading(true)
 
-    // Push data to the server
-    $.ajax({
-      url: (props.editWork == null) ? `${serverUrl}/work` : `${serverUrl}/work/user/~/${props.editWork.workId}`,
-      method: (props.editWork == null) ? 'post' : 'patch',
-      headers: {
-        ...authHeader
-      },
-      data: {
-        locationId: locationId,
-        time: Number(time.replace(',', '.')), // Make time a number
-        date: moment(date).format('YYYY-MM-DD'),
-        description: description,
-        worktypeId: worktypeId
-      }
-    }).done(() => {
-      props.onClose()
+    // Test the data
+    if (
+      description === '' ||
+      time === '' ||
+      locationID === 0 ||
+      worktypeID === 0
+    ) {
+      // Something is wrong
       setLoading(false)
-
-      // Show a toast
-      enqueueSnackbar(lg.saved, {
-        variant: 'success',
+      enqueueSnackbar(l.errInput, {
+        variant: 'error',
         autoHideDuration: 2000
       })
+    } else {
+      // Push data to the server
+      $.ajax({
+        url: (props.editWork == null) ? `${serverUrl}/user/~/work` : `${serverUrl}/user/~/work/${props.editWork.workID}`,
+        method: (props.editWork == null) ? 'post' : 'patch',
+        headers: {
+          ...authHeader
+        },
+        data: {
+          locationID: locationID,
+          time: Number(time.replace(',', '.')), // Make time a number
+          date: moment(date).format('YYYY-MM-DD'),
+          description: description,
+          worktypeID: worktypeID
+        }
+      }).done((result: {
+        workID: number
+      }) => {
+        props.onClose()
+        setLoading(false)
 
-      // Clear the time and description
-      setTime('0')
-      setDescription('')
+        // Show a toast
+        enqueueSnackbar(lg.saved, {
+          variant: 'success',
+          autoHideDuration: 2000
+        })
 
-      // Reload the work data
-      update()
-    }).fail(() => {
-      setLoading(false)
-    })
+        // Push the data to the local DB
+        const loc = location[_.findIndex(location, ['locationID', locationID])]
+        const wor = worktype[_.findIndex(worktype, ['worktypeID', worktypeID])]
+        removeWork(props.editWork?.workID || 0)
+        addWork({
+          workID: props.editWork?.workID || result.workID,
+          date: moment(date).format('YYYY-MM-DD'),
+          time: Number(time.replace(',', '.')),
+          description: description,
+          location: loc,
+          worktype: wor,
+          user: me[0]
+        })
+
+        // Clear the time and description
+        setTime('0')
+        setDescription('')
+      }).fail(() => {
+        setLoading(false)
+      })
+    }
   }
 
   // Remove the item from the server
@@ -120,7 +147,7 @@ export default function WorkDialog (props: {
 
     // Push data to the server
     $.ajax({
-      url: `${serverUrl}/work/user/~/${props.editWork?.workId}`,
+      url: `${serverUrl}/user/~/work/${props.editWork?.workID}`,
       method: 'delete',
       headers: {
         ...authHeader
@@ -139,8 +166,8 @@ export default function WorkDialog (props: {
       setTime('0')
       setDescription('')
 
-      // Realod the work data
-      update()
+      // Remove from the local DB
+      removeWork(props.editWork?.workID || 0)
     }).fail(() => {
       setLoadingDel(false)
     })
@@ -157,17 +184,17 @@ export default function WorkDialog (props: {
             {l.content}
           </DialogContentText>
           <Select
-            value={locationId}
+            value={locationID}
             onChange={(e) => { setLocation(Number(e.target.value)) }}
-            error={locationId === 0}
+            error={locationID === 0}
             fullWidth
             MenuProps={{
               transitionDuration: 0
             }}
           >
             <MenuItem value={0}>{l.selectLocation}</MenuItem>
-            {locations.map((i) => (
-              <MenuItem value={i.locationId} key={i.locationId}>{i.place} - {i.name}</MenuItem>
+            {location.map((i) => (
+              <MenuItem value={i.locationID} key={i.locationID}>{i.place} - {i.name}</MenuItem>
             ))}
           </Select>
 
@@ -185,6 +212,7 @@ export default function WorkDialog (props: {
             label={l.comment}
             fullWidth
             className={classes.spacing}
+            error={description === ''}
           />
 
           <TextField
@@ -201,9 +229,9 @@ export default function WorkDialog (props: {
           />
 
           <Select
-            value={worktypeId}
+            value={worktypeID}
             onChange={(e) => { setWorktype(Number(e.target.value)) }}
-            error={worktypeId === 0}
+            error={worktypeID === 0}
             fullWidth
             style={{
               marginTop: 16
@@ -213,20 +241,28 @@ export default function WorkDialog (props: {
             }}
           >
             <MenuItem value={0}>{l.selectWorktype}</MenuItem>
-            {worktypes.map((i) => (
-              <MenuItem value={i.worktypeId} key={i.worktypeId}>{i.name}</MenuItem>
+            {worktype.map((i) => (
+              <MenuItem value={i.worktypeID} key={i.worktypeID}>{i.name}</MenuItem>
             ))}
           </Select>
         </DialogContent>
         <DialogActions>
           <Typography component='div' hidden={props.editWork == null} className={classes.wrapper}>
-            <Button color='secondary' onClick={() => { setOpen(true); setLoadingDel(true) }} disabled={loadingDel}>
+            <Button
+              color='secondary'
+              onClick={() => { setOpen(true); setLoadingDel(true) }}
+              disabled={loadingDel || !navigator.onLine}
+            >
               {lg.btnRemove}
             </Button>
             {loadingDel && <CircularProgress size={24} className={classes.buttonProgress} />}
           </Typography>
           <div className={classes.wrapper}>
-            <Button color='primary' onClick={onSave} disabled={loading}>
+            <Button
+              color='primary'
+              onClick={onSave}
+              disabled={loading || !navigator.onLine}
+            >
               {lg.btnSave}
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}

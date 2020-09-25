@@ -1,27 +1,27 @@
 // Copyright (c) 2020 Wouter van der Wal
 
-import { Worktype } from '../@types/interfaces'
+import { Group } from '../@types/interfaces'
 import { serverUrl, authHeader } from '../global'
 import { createGlobalState } from 'react-hooks-global-state'
 import { useEffect } from 'react'
 
 const { useGlobalState } = createGlobalState({
-  worktypes: [] as Worktype[],
-  worktypeFetch: false
+  groups: [] as Group[],
+  groupFetch: false
 })
 
-const useWorktypes = () => {
+const useGroup = () => {
   // Define the states
-  const [worktypes, setWorktypes] = useGlobalState('worktypes')
-  const [worktypeFetch, setWorktypeFetch] = useGlobalState('worktypeFetch')
+  const [groups, setGroups] = useGlobalState('groups')
+  const [groupFetch, setGroupFetch] = useGlobalState('groupFetch')
 
   // Fetch all the data onMount
   useEffect(() => {
-    if (!worktypeFetch) { // Check if we are already fetching
-      setWorktypeFetch(true)
+    if (!groupFetch) { // Check if we are already fetching
+      setGroupFetch(true)
 
       // Get locations
-      fetch(`${serverUrl}/worktype`, {
+      fetch(`${serverUrl}/group`, {
         headers: {
           ...authHeader
         }
@@ -29,17 +29,17 @@ const useWorktypes = () => {
         .then(response => response.json())
         .then(data => {
           if (typeof data.forEach === 'function') {
-            setWorktypes(data)
+            setGroups(data)
           }
-          setWorktypeFetch(false)
+          setGroupFetch(false)
         })
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Return the data
   return {
-    worktypes: worktypes
+    groups: groups
   }
 }
 
-export default useWorktypes
+export default useGroup

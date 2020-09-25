@@ -6,13 +6,13 @@ import { Skeleton } from '@material-ui/lab'
 
 export const loadingSuggestions: loadingLocation[] = [
   {
-    locationId: -1,
+    locationID: -1,
     name: <Skeleton />,
     place: <Skeleton />,
     id: ''
   },
   {
-    locationId: -2,
+    locationID: -2,
     name: <Skeleton />,
     place: <Skeleton />,
     id: ''

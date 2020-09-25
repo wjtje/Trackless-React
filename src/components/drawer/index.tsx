@@ -33,7 +33,7 @@ export default function Drawer (props: {
   const [access, setAccess] = useState([] as string[])
   useEffect(() => {
     $.ajax({
-      url: `${serverUrl}/access/group/~`,
+      url: `${serverUrl}/user/~/access`,
       headers: {
         ...authHeader
       }

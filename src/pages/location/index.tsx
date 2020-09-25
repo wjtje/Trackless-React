@@ -27,7 +27,7 @@ export default function TodayPage () {
   const [locations, setLocation] = useState([] as Location[])
   const [open, setOpen] = useState(false)
   const [editLocation, setEditLocation] = useState({
-    locationId: 0,
+    locationID: 0,
     hidden: 0,
     name: '',
     place: '',
@@ -84,7 +84,7 @@ export default function TodayPage () {
             >
               {({ index, style }) => (
                 <ListItem
-                  key={locations[index].locationId}
+                  key={locations[index].locationID}
                   style={style}
                   button
                   onClick={() => {
@@ -113,7 +113,7 @@ export default function TodayPage () {
           onClick={() => {
             // Disable editing and show the dialog
             setEditLocation({
-              locationId: 0,
+              locationID: 0,
               hidden: 0,
               name: '',
               place: '',
