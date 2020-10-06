@@ -173,9 +173,11 @@ export default {
     errInput: 'De gegevens die u heeft ingevult is niet correct'
   },
 
-  addUserDialog: {
+  userDialog: {
     title: 'Nieuwe medewerker toevoegen',
+    editTitle: 'Medewerker aanpassen',
     content: 'Geef hieronder de gegevens van de nieuwe medewerker op. Die persoon kan inloggen met zijn gebruikersnaam en wachtwoord.',
+    editContent: 'Pas hier onder alle gegevens aan van een medewerker. Als het wachtwoord leeg is wordt hij niet aangepast. Waarschuwing als u een medewerker verwijderd wordt ook al zijn ingevulde werk verwijdert. Houdt daar rekening mee!',
     firstname: 'Voornaam',
     lastname: 'Achternaam',
     username: 'Gebruikersnaam',

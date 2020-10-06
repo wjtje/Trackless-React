@@ -11,7 +11,7 @@ import ListSkeleton from '../../components/ListSkeleton'
 import language from '../../language'
 import useUser from '../../hooks/useUsers'
 import { Add as AddIcon } from '@material-ui/icons'
-import AddUserDialog from '../../components/addUserDialog'
+import UserDialog from '../../components/userDialog'
 
 const l = language.userPage
 const lg = language.global
@@ -40,6 +40,9 @@ export default function UserPage () {
     }))
   }, [search, users])
 
+  // States for editing a user
+  const [editUser, setEditUser] = useState(null as User | null)
+
   return (
     <Container className={classes.main}>
       <Typography variant='h5'>{l.title}</Typography>
@@ -67,7 +70,9 @@ export default function UserPage () {
                   style={style}
                   button
                   onClick={() => {
-                    // Set the correct id
+                    // Set the correct data
+                    setEditUser(list[index])
+                    setAddDialog(true)
                   }}
                 >
                   <ListItemText
@@ -87,7 +92,8 @@ export default function UserPage () {
           aria-label='add'
           className={classes.fab}
           onClick={() => {
-            // Disable editing and show workDialog
+            // Disable editing and show the dialog
+            setEditUser(null)
             setAddDialog(true)
           }}
           disabled={!navigator.onLine}
@@ -96,7 +102,7 @@ export default function UserPage () {
         </Fab>
       </Zoom>
 
-      <AddUserDialog open={addDialog} onClose={() => { setAddDialog(false) }} />
+      <UserDialog open={addDialog} onClose={() => { setAddDialog(false) }} editUser={editUser} />
     </Container>
   )
 }
