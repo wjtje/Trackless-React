@@ -36,9 +36,25 @@ const useUser = () => {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Get the new users form the serger
+  function reloadUsers () {
+    fetch(`${serverUrl}/user`, {
+      headers: {
+        ...authHeader
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (typeof data.forEach === 'function') {
+          setUsers(data)
+        }
+      })
+  }
+
   // Return the data
   return {
-    users: users
+    users: users,
+    reloadUsers: reloadUsers
   }
 }
 

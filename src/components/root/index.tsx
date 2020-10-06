@@ -79,8 +79,8 @@ export default function RootElement () {
         <DialogContent>
           <DialogContentText>Wat is nieuw in versie {version}</DialogContentText>
           <ul>
-            <li>Het totaal aantal uren van een weekbriefje wordt automatisch berekend</li>
             <li>De app gebruikt nu minder internet</li>
+            <li>De fout dat er iets mis kon gaan tijdens het opslaan van werk is opgelost</li>
           </ul>
         </DialogContent>
         <DialogActions>

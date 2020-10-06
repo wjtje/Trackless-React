@@ -8,3 +8,5 @@
 # Changed in this version
 
 # Things that are fixed
+
+ - When saving or removing work the time will now be set correct

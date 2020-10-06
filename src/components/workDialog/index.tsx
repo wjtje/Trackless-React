@@ -132,7 +132,7 @@ export default function WorkDialog (props: {
         })
 
         // Clear the time and description
-        setTime('0')
+        setTime('')
         setDescription('')
       }).fail(() => {
         setLoading(false)
@@ -163,7 +163,7 @@ export default function WorkDialog (props: {
       })
 
       // Clear the time and description
-      setTime('0')
+      setTime('')
       setDescription('')
 
       // Remove from the local DB

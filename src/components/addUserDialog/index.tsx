@@ -8,6 +8,7 @@ import $ from 'jquery'
 import { useSnackbar } from 'notistack'
 import language from '../../language'
 import useGroup from '../../hooks/useGroup'
+import useUser from '../../hooks/useUsers'
 
 const l = language.addUserDialog
 const lg = language.global
@@ -22,14 +23,15 @@ export default function AddUserDialog (props: {
   const { enqueueSnackbar } = useSnackbar()
 
   const { groups } = useGroup()
+  const { reloadUsers } = useUser()
 
   // States for the inputs
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [username, setUsername] = useState('')
   const [groupID, setgroupID] = useState(0)
-  // const [password, setPassword] = useState('')
-  // const [passwordRE, setPasswordRE] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordRE, setPasswordRE] = useState('')
 
   const [loading, setLoading] = useState(false)
 
@@ -41,7 +43,10 @@ export default function AddUserDialog (props: {
     if (
       firstname === '' ||
       lastname === '' ||
-      username === ''
+      username === '' ||
+      groupID === 0 ||
+      password === '' ||
+      password !== passwordRE
     ) {
       // Something is wrong
       setLoading(false)
@@ -58,8 +63,14 @@ export default function AddUserDialog (props: {
           ...authHeader
         },
         data: {
+          firstname: firstname,
+          lastname: lastname,
+          username: username,
+          password: password,
+          groupID: groupID
         }
       }).done(() => {
+        reloadUsers() // Get the new users from the server
         props.onClose()
         setLoading(false)
 
@@ -73,6 +84,9 @@ export default function AddUserDialog (props: {
         setFirstname('')
         setLastname('')
         setUsername('')
+        setgroupID(0)
+        setPassword('')
+        setPasswordRE('')
       }).fail(() => {
         setLoading(false)
       })
@@ -114,6 +128,26 @@ export default function AddUserDialog (props: {
             fullWidth
             className={classes.spacing}
             error={username === ''}
+          />
+
+          <TextField
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            label={l.password}
+            fullWidth
+            className={classes.spacing}
+            error={password === ''}
+            type='password'
+          />
+
+          <TextField
+            value={passwordRE}
+            onChange={e => setPasswordRE(e.target.value)}
+            label={l.passwordRE}
+            fullWidth
+            className={classes.spacing}
+            error={passwordRE !== password || passwordRE === ''}
+            type='password'
           />
 
           <Select

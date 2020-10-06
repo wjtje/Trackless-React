@@ -180,6 +180,8 @@ export default {
     lastname: 'Achternaam',
     username: 'Gebruikersnaam',
     selectGroup: 'Selecteer een group',
-    errInput: 'De gegevens die u heeft ingevult is niet correct'
+    errInput: 'De gegevens die u heeft ingevult is niet correct',
+    password: 'Wachtwoord',
+    passwordRE: 'Wachtwoord herhalen'
   }
 }
