@@ -3,7 +3,7 @@
 import { nl } from 'date-fns/locale'
 import 'moment/locale/nl'
 
-export const serverUrl = 'https://server.trackless.ga'
+export const serverUrl = localStorage.getItem('serverUrl')
 export const authHeader = {
   Authorization: `Bearer ${localStorage.getItem('apiKey')}`
 }
