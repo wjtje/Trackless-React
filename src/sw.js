@@ -1,6 +1,6 @@
 /* eslint-env worker, serviceworker */
 
-var CACHE_NAME = 'trackless-0.3-beta.1a'
+var CACHE_NAME = 'trackless-0.3-beta.4a'
 var urlsToCache = [
   '/'
 ]
