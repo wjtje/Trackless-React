@@ -1,6 +1,6 @@
 // Copyright (c) 2020 Wouter van der Wal
 
-import React, { useState } from 'react'
+import React from 'react'
 import AppBar from '../appBar'
 import TodayPage from '../../pages/today'
 import { useSnackbar } from 'notistack'
@@ -15,8 +15,6 @@ import ExportPage from '../../pages/export'
 import HistoryPage from '../../pages/history'
 import $ from 'jquery'
 import language from '../../language'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, DialogActions } from '@material-ui/core'
-import { version } from '../../global'
 
 const l = language.root
 
@@ -25,20 +23,25 @@ let lastError = ''
 export default function RootElement () {
   const { enqueueSnackbar } = useSnackbar()
 
-  // Go to the login page
+  // Check if there is any stored data
   if (
-    window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login' &&
-    (window.localStorage.getItem('apiKey') == null || window.localStorage.getItem('apiKey') === '')
+    window.localStorage.getItem('apiKey') == null ||
+    window.localStorage.getItem('serverUrl') == null
   ) {
-    window.location.href = '/login'
-  }
+    // TOOD: Clear all the local caches
+    // Make sure you are on the login page
+    if (window.location.href.split('/')[window.location.href.split('/').length - 1] !== 'login') {
+      window.location.href = '/login'
+    }
+  } else {
+    // Go to the home page
+    if (window.location.href.split('/')[window.location.href.split('/').length - 1] === 'login') {
+      window.location.href = '/'
+    }
 
-  // Go to the homepage
-  if (
-    window.location.href.split('/')[window.location.href.split('/').length - 1] === 'login' &&
-    window.localStorage.getItem('apiKey') != null && window.localStorage.getItem('apiKey') !== ''
-  ) {
-    window.location.href = '/'
+    // Load the basic user infomation
+    // TODO: load user details
+    // TODO: load user access
   }
 
   // Define global error
@@ -68,27 +71,9 @@ export default function RootElement () {
     }
   })
 
-  // States for update dialog
-  const [open, setOpen] = useState((window.localStorage.getItem('lastVersion') !== version))
-
   return (
     <div>
       <AppBar />
-      <Dialog open={open} onClose={() => { setOpen(false); window.localStorage.setItem('lastVersion', version) }}>
-        <DialogTitle>Trackless is geupdated!</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Wat is nieuw in versie {version}</DialogContentText>
-          <ul>
-            <li>De app gebruikt nu minder internet</li>
-            <li>De fout dat er iets mis kon gaan tijdens het opslaan van werk is opgelost</li>
-          </ul>
-        </DialogContent>
-        <DialogActions>
-          <Button color='primary' onClick={() => { setOpen(false); window.localStorage.setItem('lastVersion', version) }}>
-            Sluiten
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Switch>
         <Route path='/' exact component={() => <TodayPage />} />
         <Route path='/account' exact component={() => <AccountPage />} />

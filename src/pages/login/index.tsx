@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import { Container, Avatar, Typography, TextField, Button, CircularProgress } from '@material-ui/core'
 import useStyles from './useStyles'
 import { Lock } from '@material-ui/icons'
-import { serverUrl } from '../../global'
 import $ from 'jquery'
 import language from '../../language'
+import { useSnackbar } from 'notistack'
 
 const l = language.loginPage
 
@@ -15,13 +15,39 @@ export default function TodayPage () {
 
   const [loading, setLoading] = useState(false)
 
+  // Enable snackbar support
+  const { enqueueSnackbar } = useSnackbar()
+
   const singIn = () => {
+    setLoading(true)
+
     // Get the data
+    let serverUrl = ($('#serverUrl')[0] as HTMLInputElement).value
     const username = ($('#username')[0] as HTMLInputElement).value
     const password = ($('#password')[0] as HTMLInputElement).value
-    const deviceName = ($('#devicename')[0] as HTMLInputElement).value
+    let deviceName = ($('#devicename')[0] as HTMLInputElement).value
 
-    setLoading(true)
+    // Test the serverURl
+    if (!serverUrl.includes('https://') && !serverUrl.includes('http://')) {
+      // Add https
+      serverUrl = `https://${serverUrl}`
+
+      console.log(`Login: New serverUrl: "${serverUrl}"`)
+    }
+
+    if (serverUrl[serverUrl.length - 1] === '/') {
+      // Add /
+      serverUrl = serverUrl.substring(0, serverUrl.length - 1)
+
+      console.log(`Login: New serverUrl: "${serverUrl}"`)
+    }
+
+    // Test the deviceName
+    if (deviceName === '') {
+      deviceName = `${username}'s device`
+
+      console.log(`Login: New deviceName: "${deviceName}"`)
+    }
 
     // Send it to the server
     $.ajax({
@@ -36,9 +62,11 @@ export default function TodayPage () {
       console.log(result)
       // Save api key
       localStorage.setItem('apiKey', result.bearer)
+      localStorage.setItem('serverUrl', serverUrl)
       location.reload()
     }).fail(() => {
       setLoading(false)
+      enqueueSnackbar(l.error)
     })
   }
 
@@ -63,10 +91,19 @@ export default function TodayPage () {
           margin='normal'
           required
           fullWidth
+          id='serverUrl'
+          label={l.serverUrl}
+          name='serverUrl'
+          autoFocus
+        />
+        <TextField
+          variant='outlined'
+          margin='normal'
+          required
+          fullWidth
           id='username'
           label={l.username}
           name='username'
-          autoFocus
         />
         <TextField
           variant='outlined'
@@ -81,7 +118,6 @@ export default function TodayPage () {
         <TextField
           variant='outlined'
           margin='normal'
-          required
           fullWidth
           name='devicename'
           label={l.deviceName}

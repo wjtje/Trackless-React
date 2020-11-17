@@ -10,7 +10,11 @@ const useTheme = () => {
       return createMuiTheme({
         palette: {
           primary: {
-            main: '#0B132B'
+            main: '#49cbf3',
+            light: '#86FEFF'
+          },
+          secondary: {
+            main: '#564AE4'
           },
           type: prefersDarkMode ? 'dark' : 'light'
         }

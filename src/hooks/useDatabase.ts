@@ -86,7 +86,7 @@ function useDatabase () {
       if (navigator.onLine) {
         console.log('Filling database')
         // Only load this week of data
-        fetch(`${serverUrl}/work/user/~/date/${moment().day(0).format('YYYY-MM-DD')}/${moment().day(6).format('YYYY-MM-DD')}`, {
+        fetch(`${serverUrl}/user/~/work?startDate=${moment().day(0).format('YYYY-MM-DD')}&endDate=${moment().day(6).format('YYYY-MM-DD')}&order=date`, {
           headers: {
             ...authHeader
           }

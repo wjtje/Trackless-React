@@ -90,10 +90,12 @@ export default {
 
   loginPage: {
     title: 'Inloggen',
+    serverUrl: 'Server',
     username: 'Gebruikersnaam',
     password: 'Wachtwoord',
     deviceName: 'Apparaat naam',
-    btn: 'Inloggen'
+    btn: 'Inloggen',
+    error: 'Gebruikersnaam of wachtwoord incorrect'
   },
 
   settingsPage: {

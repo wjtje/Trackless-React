@@ -22,29 +22,17 @@ const useLocation = () => {
     if (!locationFetch) { // Check if we are already fetching
       setLocationFetch(true)
 
-      // Get last used
-      fetch(`${serverUrl}/location/user/~/last`, {
+      // Get user location infomation
+      fetch(`${serverUrl}/user/~/location`, {
         headers: {
           ...authHeader
         }
       })
         .then(response => response.json())
         .then(data => {
-          if (typeof data.forEach === 'function') {
-            setLastUsed(data)
-          }
-        })
-
-      // Get most used
-      fetch(`${serverUrl}/location/user/~/most`, {
-        headers: {
-          ...authHeader
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (typeof data.forEach === 'function') {
-            setMostUsed(data)
+          if (typeof data === 'object') {
+            setLastUsed(data.last)
+            setMostUsed(data.most)
           }
         })
     }
