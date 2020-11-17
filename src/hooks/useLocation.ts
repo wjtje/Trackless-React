@@ -33,6 +33,9 @@ const useLocation = () => {
           if (typeof data === 'object') {
             setLastUsed(data.last)
             setMostUsed(data.most)
+          } else {
+            setLastUsed([])
+            setMostUsed([])
           }
         })
     }

@@ -44,7 +44,9 @@ export default function WorkDialog (props: {
 
   // Update lastUsed location
   useEffect(() => {
-    setLocation(lastUsed[0]?.locationID)
+    if (lastUsed != null) {
+      setLocation(lastUsed[0]?.locationID)
+    }
   }, [lastUsed])
 
   // Update most used location

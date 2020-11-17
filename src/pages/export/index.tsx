@@ -174,7 +174,7 @@ export default function ExportPage () {
   const onExport = (startDate: string, endDate: string) => {
     if (downloadId !== 0) {
       $.ajax({
-        url: `${serverUrl}/work/user/${downloadId}/date/${startDate}/${endDate}`,
+        url: `${serverUrl}/user/${downloadId}/work?startDate=${startDate}&endDate=${endDate}`,
         headers: {
           ...authHeader
         }
@@ -189,7 +189,7 @@ export default function ExportPage () {
       }).done((users: User[]) => {
         users.forEach((user) => {
           $.ajax({
-            url: `${serverUrl}/work/user/${user.userID}/date/${startDate}/${endDate}`,
+            url: `${serverUrl}/user/${user.userID}/work?startDate=${startDate}&endDate=${endDate}`,
             headers: {
               ...authHeader
             }

@@ -26,7 +26,9 @@ export default function RootElement () {
   // Check if there is any stored data
   if (
     window.localStorage.getItem('apiKey') == null ||
-    window.localStorage.getItem('serverUrl') == null
+    window.localStorage.getItem('serverUrl') == null ||
+    window.localStorage.getItem('apiKey') === '' ||
+    window.localStorage.getItem('serverUrl') === ''
   ) {
     // TOOD: Clear all the local caches
     // Make sure you are on the login page
