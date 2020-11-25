@@ -1,13 +1,16 @@
 // Copyright (c) 2020 Wouter van der Wal
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, TextField, Typography, DialogContentText } from '@material-ui/core'
+import { Dialog, useMediaQuery, useTheme, DialogContent, DialogActions, DialogTitle, Button, TextField, Typography, DialogContentText, InputAdornment } from '@material-ui/core'
 import { serverUrl, authHeader } from '../../global'
 import $ from 'jquery'
 import { Location } from '../../@types/interfaces'
 import { useSnackbar } from 'notistack'
 import RemoveDialog from '../RemoveDialog'
 import language from '../../language'
+import PlaceIcon from '@material-ui/icons/Place'
+import PersonIcon from '@material-ui/icons/Person'
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh'
 
 const l = language.locationDialog
 const lg = language.global
@@ -145,31 +148,58 @@ export default function LocationDialog (props: {
           <DialogContentText>
             {(editMode) ? l.contentEdit : l.contentAdd}
           </DialogContentText>
+          {/* Place */}
           <TextField
             value={place}
             onChange={e => setPlace(e.target.value)}
             label={l.place}
             type='text'
-            margin='dense'
+            margin='normal'
             fullWidth
+            variant='outlined'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <PlaceIcon />
+                </InputAdornment>
+              )
+            }}
           />
 
+          {/* Project */}
           <TextField
             value={name}
             onChange={e => setName(e.target.value)}
             label={l.name}
             type='text'
-            margin='dense'
+            margin='normal'
             fullWidth
+            variant='outlined'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <PersonIcon />
+                </InputAdornment>
+              )
+            }}
           />
 
+          {/* Internal id */}
           <TextField
             value={id}
             onChange={e => setId(e.target.value)}
             label={l.id}
             type='text'
-            margin='dense'
+            margin='normal'
             fullWidth
+            variant='outlined'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <PriorityHighIcon />
+                </InputAdornment>
+              )
+            }}
           />
         </DialogContent>
         <DialogActions>

@@ -30,6 +30,7 @@ export default function Drawer (props: {
 }) {
   const classes = useStyles()
 
+  // Get the access rules for that user
   const [access, setAccess] = useState([] as string[])
   useEffect(() => {
     $.ajax({
@@ -122,6 +123,8 @@ export default function Drawer (props: {
           </ListItem>
         </Link>
 
+        {/* The admin options */}
+
         <Link
           to='/export'
           className={classes.link}
@@ -134,23 +137,6 @@ export default function Drawer (props: {
           <ListItem button>
             <ListItemIcon><ImportExportIcon /></ListItemIcon>
             <ListItemText primary={l.export} />
-          </ListItem>
-        </Link>
-
-        <Link
-          to='/account'
-          className={classes.link}
-          onClick={props.onClose}
-          hidden={(
-            access.indexOf('trackless.user.readOwn') === -1 ||
-            access.indexOf('trackless.user.editOwn') === -1 ||
-            access.indexOf('trackless.api.read') === -1 ||
-            access.indexOf('trackless.api.remove') === -1
-          )}
-        >
-          <ListItem button>
-            <ListItemIcon><AccountBoxIcon /></ListItemIcon>
-            <ListItemText primary={l.account} />
           </ListItem>
         </Link>
 
@@ -186,6 +172,27 @@ export default function Drawer (props: {
           <ListItem button>
             <ListItemIcon><PeopleIcon /></ListItemIcon>
             <ListItemText primary={l.users} />
+          </ListItem>
+        </Link>
+      </List>
+
+      <Divider />
+
+      <List className={classes.list}>
+        <Link
+          to='/account'
+          className={classes.link}
+          onClick={props.onClose}
+          hidden={(
+            access.indexOf('trackless.user.readOwn') === -1 ||
+            access.indexOf('trackless.user.editOwn') === -1 ||
+            access.indexOf('trackless.api.read') === -1 ||
+            access.indexOf('trackless.api.remove') === -1
+          )}
+        >
+          <ListItem button>
+            <ListItemIcon><AccountBoxIcon /></ListItemIcon>
+            <ListItemText primary={l.account} />
           </ListItem>
         </Link>
 

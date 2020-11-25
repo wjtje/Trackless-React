@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "parcel serve src/index.html -p 55567",
     "build": "parcel build -d build --no-source-maps --public-url . src/index.html",
-    "test": "standardx **/*.ts **/*.tsx && tsc"
+    "test": "standardx **/*.ts **/*.tsx && tsc",
+    "licenses": "npm-license-crawler -onlyDirectDependencies -json src/licenses.json"
   },
   "repository": {
     "type": "git",

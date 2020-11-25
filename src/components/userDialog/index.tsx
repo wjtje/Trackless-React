@@ -222,7 +222,9 @@ export default function UserDialog (props: {
             value={firstname}
             onChange={e => setFirstname(e.target.value)}
             label={l.firstname}
+            margin='normal'
             fullWidth
+            variant='outlined'
             className={classes.spacing}
             error={firstname === ''}
           />
@@ -231,7 +233,9 @@ export default function UserDialog (props: {
             value={lastname}
             onChange={e => setLastname(e.target.value)}
             label={l.lastname}
+            margin='normal'
             fullWidth
+            variant='outlined'
             className={classes.spacing}
             error={lastname === ''}
           />
@@ -240,7 +244,9 @@ export default function UserDialog (props: {
             value={username}
             onChange={e => setUsername(e.target.value)}
             label={l.username}
+            margin='normal'
             fullWidth
+            variant='outlined'
             className={classes.spacing}
             error={username === ''}
           />
@@ -249,7 +255,9 @@ export default function UserDialog (props: {
             value={password}
             onChange={e => setPassword(e.target.value)}
             label={l.password}
+            margin='normal'
             fullWidth
+            variant='outlined'
             className={classes.spacing}
             error={password === '' && props.editUser == null}
             type='password'
@@ -259,7 +267,9 @@ export default function UserDialog (props: {
             value={passwordRE}
             onChange={e => setPasswordRE(e.target.value)}
             label={l.passwordRE}
+            margin='normal'
             fullWidth
+            variant='outlined'
             className={classes.spacing}
             error={passwordRE !== password || (passwordRE === '' && props.editUser == null)}
             type='password'
@@ -273,6 +283,7 @@ export default function UserDialog (props: {
             MenuProps={{
               transitionDuration: 0
             }}
+            variant='outlined'
             style={{
               marginTop: 16
             }}
